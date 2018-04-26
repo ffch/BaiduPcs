@@ -5,14 +5,24 @@ public class PcsFileDto {
 	String userId = "";
 	String appId = "";
 	String path = "";
+	String parentPath = "";
 	String serverFilename = "";
 	String serverMtime = "";
 	String serverCtime = "";
 	String localMtime = "";
 	String localCtime = "";
 	int isDir = 0;
+	int ifHasSubdir = 0;
 	int status = 0;
 	int category = 0;
+	int isDelete = 0;
+	
+	int extentInt3 = 0;
+	int extentTinyint1 = 0;
+	int extentTinyint2 = 0;
+	int extentTinyint3 = 0;
+	int extentTinyint4 = 0;
+	
 	int share = 0;
 	String operId = "";
 	String unlist = "";
@@ -129,12 +139,63 @@ public class PcsFileDto {
 	public void setSize(int size) {
 		this.size = size;
 	}
+	public String getParentPath() {
+		return parentPath;
+	}
+	public void setParentPath(String parentPath) {
+		this.parentPath = parentPath;
+	}
+	public int getIfHasSubdir() {
+		return ifHasSubdir;
+	}
+	public void setIfHasSubdir(int ifHasSubdir) {
+		this.ifHasSubdir = ifHasSubdir;
+	}
+	public int getIsDelete() {
+		return isDelete;
+	}
+	public void setIsDelete(int isDelete) {
+		this.isDelete = isDelete;
+	}
+	public int getExtentInt3() {
+		return extentInt3;
+	}
+	public void setExtentInt3(int extentInt3) {
+		this.extentInt3 = extentInt3;
+	}
+	public int getExtentTinyint1() {
+		return extentTinyint1;
+	}
+	public void setExtentTinyint1(int extentTinyint1) {
+		this.extentTinyint1 = extentTinyint1;
+	}
+	public int getExtentTinyint2() {
+		return extentTinyint2;
+	}
+	public void setExtentTinyint2(int extentTinyint2) {
+		this.extentTinyint2 = extentTinyint2;
+	}
+	public int getExtentTinyint3() {
+		return extentTinyint3;
+	}
+	public void setExtentTinyint3(int extentTinyint3) {
+		this.extentTinyint3 = extentTinyint3;
+	}
+	public int getExtentTinyint4() {
+		return extentTinyint4;
+	}
+	public void setExtentTinyint4(int extentTinyint4) {
+		this.extentTinyint4 = extentTinyint4;
+	}
 	@Override
 	public String toString() {
 		return "PcsFileDto [fsId=" + fsId + ", userId=" + userId + ", appId=" + appId + ", path=" + path
-				+ ", serverFilename=" + serverFilename + ", serverMtime=" + serverMtime + ", serverCtime=" + serverCtime
-				+ ", localMtime=" + localMtime + ", localCtime=" + localCtime + ", isDir=" + isDir + ", status="
-				+ status + ", category=" + category + ", share=" + share + ", operId=" + operId + ", unlist=" + unlist
-				+ ", mtime=" + mtime + ", ctime=" + ctime + ", size=" + size + "]";
+				+ ", parentPath=" + parentPath + ", serverFilename=" + serverFilename + ", serverMtime=" + serverMtime
+				+ ", serverCtime=" + serverCtime + ", localMtime=" + localMtime + ", localCtime=" + localCtime
+				+ ", isDir=" + isDir + ", ifHasSubdir=" + ifHasSubdir + ", status=" + status + ", category=" + category
+				+ ", isDelete=" + isDelete + ", extentInt3=" + extentInt3 + ", extentTinyint1=" + extentTinyint1
+				+ ", extentTinyint2=" + extentTinyint2 + ", extentTinyint3=" + extentTinyint3 + ", extentTinyint4="
+				+ extentTinyint4 + ", share=" + share + ", operId=" + operId + ", unlist=" + unlist + ", mtime=" + mtime
+				+ ", ctime=" + ctime + ", size=" + size + "]";
 	}
 }

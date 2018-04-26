@@ -255,6 +255,19 @@ public class OkHttpUtil {
 
 		return json;
 	}
+	
+	public String doPostWithBodyAndHeader(String uri, RequestBody formBody) throws IOException {
+		Request request = new Request.Builder().url(uri).post(formBody).build();
+
+		Response response = client.newCall(request).execute();
+		if (!response.isSuccessful())
+			throw new IOException("Unexpected code " + response);
+
+		String json = null;
+		json = response.body().string();
+
+		return json;
+	}
 
 	@Test
 	public void test() {

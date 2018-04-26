@@ -82,7 +82,9 @@ public class StringUtil {
 			pathElements.add(0, TOP_PATH);
 		}
 
-		return prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
+		String res =  prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
+		if(res.startsWith("//"))return res.replaceFirst("//", "/");
+		return res;
 	}
 	
 	public static String replace(String inString, String oldPattern, String newPattern) {

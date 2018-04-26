@@ -7,14 +7,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.cff.baidupcs.client.service.BaiduHttpService;
+import com.cff.baidupcs.client.service.DownloadService;
 import com.cff.baidupcs.client.service.LsHttpService;
+import com.cff.baidupcs.client.service.PcsCdService;
 import com.cff.baidupcs.client.service.PcsClientService;
 import com.cff.baidupcs.model.dto.BaiduDto;
 import com.cff.baidupcs.model.dto.OpsParamDto;
 import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.SystemUtil;
 
-public class PcsLsSystem implements OperateSystem {
+public class PcsCdSystem implements OperateSystem {
 	public List<Integer> allow = Arrays.asList(0,1,2,4); 
 	static Map<String,OpsParamDto> opsParams = new ConcurrentHashMap<String,OpsParamDto>();
 	static {
@@ -26,7 +28,7 @@ public class PcsLsSystem implements OperateSystem {
 		BaiduDto baiduDto = BaiduClientStore.currentActiveBaiduDto;
 
 		String path = baiduDto.getWorkdir();
-		SystemUtil.logLeft("当前目录：" + path );
+		
 		Map<String,String> opsParamsTmp = new HashMap<String,String>();
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
@@ -47,18 +49,19 @@ public class PcsLsSystem implements OperateSystem {
 		if(!checkAllow(value)){
 			SystemUtil.logError("参数不是这样用的！");
 		}
+		
 		if(opsParamsTmp.size() < 1 ){
 			if(command.length == 2){
 				path = command[1];
 			}
-			LsHttpService lsHttpService = new LsHttpService();
-			lsHttpService.runLs(path);
+			PcsCdService pcsCdService = new PcsCdService();
+			pcsCdService.run(path);
 		}else{
 			for (String key : opsParamsTmp.keySet()) {
 				switch(key){
 					case "-f":
-						LsHttpService lsHttpService = new LsHttpService();
-						lsHttpService.runLs(opsParamsTmp.get(key));
+						PcsCdService pcsCdService = new PcsCdService();
+						pcsCdService.run(opsParamsTmp.get(key));
 						break;
 					default:
 						break;
