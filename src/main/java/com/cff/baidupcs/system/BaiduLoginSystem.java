@@ -23,7 +23,7 @@ public class BaiduLoginSystem implements OperateSystem {
 	static Map<String,OpsParamDto> opsParams = new ConcurrentHashMap<String,OpsParamDto>();
 	static {
 		opsParams.put("-test", new OpsParamDto(1,true,false));
-		opsParams.put("-f", new OpsParamDto(2,"",true));
+		opsParams.put("-loc", new OpsParamDto(2,true,false));
 	}
 	public List<Integer> allow = Arrays.asList(1,2,4,3); 
 	@Override
@@ -51,13 +51,19 @@ public class BaiduLoginSystem implements OperateSystem {
 		
 		for (String key : opsParamsTmp.keySet()) {
 			switch(key){
-				case"-test":
+				case "-test":
 					loadUser();
 			        BaiduHttpService baiduHttpService = new BaiduHttpService();
 					BaiduDto baiduDto = baiduHttpService.login();
 					SystemUtil.logLeft("百度账号登陆成功！");
 			        PcsClientService pcsClientService = new PcsClientService();
 			        pcsClientService.init(baiduDto);
+					break;
+				case "-loc":
+					BaiduDto baiduDtoFromFile = loadPcsInfo();
+					SystemUtil.logLeft("百度账号登陆成功！");
+			        PcsClientService pcsClientServiceLoc = new PcsClientService();
+			        pcsClientServiceLoc.initial(baiduDtoFromFile);
 					break;
 				default:
 					break;
@@ -67,6 +73,21 @@ public class BaiduLoginSystem implements OperateSystem {
 
 	public Boolean checkAllow(int value){
 		return allow.contains(value);
+	}
+	
+	public BaiduDto loadPcsInfo() throws IOException{
+		Properties properties = new Properties();
+		InputStream in = new FileInputStream("D:\\PcsLogin.txt");
+		properties.load(in);
+		BaiduDto baiduDto = new BaiduDto();
+		baiduDto.setBduss(properties.getProperty("bduss"));
+		baiduDto.setName(properties.getProperty("name"));
+		baiduDto.setPtoken(properties.getProperty("ptoken"));
+		baiduDto.setStoken(properties.getProperty("stoken"));
+		baiduDto.setWorkdir(properties.getProperty("workdir"));
+		baiduDto.setUID(properties.getProperty("uid"));
+		baiduDto.setNameShow(properties.getProperty("nameshow"));
+		return baiduDto;
 	}
 	
 	public void loadUser() throws IOException{

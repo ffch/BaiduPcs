@@ -1,6 +1,10 @@
 package com.cff.baidupcs.client.service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -46,7 +50,26 @@ public class BaiduHttpService {
 	public BaiduDto login() {
 		BaiduDto baiduDto = baiduLogin();
 		BaiduHttpService.setBduus(baiduDto);
+		WriteStringToFile("D:\\PcsLogin.txt",baiduDto);
+
 		return baiduDto;
+	}
+	
+	public void WriteStringToFile(String filePath,BaiduDto baiduDto) {
+		try {
+			File file = new File(filePath);
+			PrintStream ps = new PrintStream(new FileOutputStream(file));
+			ps.println("bduss="+baiduDto.getBduss());// 往文件里写入字符串
+			ps.println("ptoken="+baiduDto.getPtoken());
+			ps.println("stoken="+baiduDto.getStoken());
+			ps.println("uid="+baiduDto.getUID());
+			ps.println("name="+baiduDto.getName());
+			ps.println("nameshow="+baiduDto.getNameShow());
+			ps.println("workdir="+baiduDto.getWorkdir());
+			ps.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public BaiduDto baiduLogin() {
@@ -147,8 +170,13 @@ public class BaiduHttpService {
 	public static void setBduus(BaiduDto baidu) {
 		try {
 			BaiduDto baiduDto = getTieBaUserInfo(baidu);
-			baiduDto.setPtoken(baidu.getPtoken());
-			baiduDto.setStoken(baidu.getStoken());
+			baidu.setUID(baiduDto.getUID());
+			baidu.setAge(baiduDto.getAge());
+			baidu.setName(baiduDto.getName());
+			baidu.setNameShow(baiduDto.getNameShow());
+			baidu.setSex(baiduDto.getSex());
+//			baiduDto.setPtoken(baidu.getPtoken());
+//			baiduDto.setStoken(baidu.getStoken());
 			BaiduClientStore.bdClients.put(baiduDto.getUID(), baiduDto);
 			BaiduClientStore.currentActiveUid = baiduDto.getUID();
 			BaiduClientStore.currentActiveBaiduDto = baiduDto;
