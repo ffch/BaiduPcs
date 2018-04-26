@@ -7,13 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.cff.baidupcs.common.Constant;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.ConnectionPool;
@@ -29,7 +24,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OkHttpUtil {
-	private final Logger log = LoggerFactory.getLogger(OkHttpUtil.class.getName());
 	private final int DEFAULT_TIMEOUT = 5000;
 	private static OkHttpClient client;
 	public static final MediaType FORM_CONTENT_TYPE_UTF8 = MediaType
@@ -59,13 +53,6 @@ public class OkHttpUtil {
 					@Override
 					public List<Cookie> loadForRequest(HttpUrl httpUrl) {
 						List<Cookie> cookies = cookieStore.get(httpUrl.host());
-						if (cookies != null && cookies.size() > 0) {
-							System.out.println("cookie : " + httpUrl.host() + "数据如下：");
-							for (int i = 0; i < cookies.size(); i++) {
-								System.out.println("cookie数据 : " + cookies.get(i).toString());
-							}
-						}
-
 						return cookies != null ? cookies : new ArrayList<Cookie>();
 					}
 				}).build();
@@ -103,7 +90,6 @@ public class OkHttpUtil {
 	 * @throws IOException
 	 */
 	public String doGetWithJsonResult(String uri) throws IOException {
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).build();
 
 		Response response = client.newCall(request).execute();
@@ -112,11 +98,6 @@ public class OkHttpUtil {
 
 		String json = null;
 		json = response.body().string();
-
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
-
 		return json;
 	}
 
@@ -128,7 +109,6 @@ public class OkHttpUtil {
 	 * @throws IOException
 	 */
 	public Response doGetWithResponse(String uri) throws IOException {
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).build();
 
 		Response response = client.newCall(request).execute();
@@ -157,7 +137,6 @@ public class OkHttpUtil {
 		}
 		formBody = formEncodingBuilder.build();
 
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).post(formBody).build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful())
@@ -165,10 +144,6 @@ public class OkHttpUtil {
 
 		String json = null;
 		json = response.body().string();
-
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
 
 		return json;
 	}
@@ -193,7 +168,6 @@ public class OkHttpUtil {
 		}
 		formBody = formEncodingBuilder.build();
 
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).post(formBody).build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful())
@@ -201,10 +175,6 @@ public class OkHttpUtil {
 
 		String json = null;
 		json = response.body().string();
-
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
 
 		return json;
 	}
@@ -220,7 +190,6 @@ public class OkHttpUtil {
 	 */
 	public String doPostJsonSync(String uri, String jsonObj) throws IOException {
 		RequestBody requestBody = RequestBody.create(JSON_CONTENT_TYPE_UTF8, jsonObj);
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).post(requestBody).build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful())
@@ -228,10 +197,6 @@ public class OkHttpUtil {
 
 		String json = null;
 		json = response.body().string();
-
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
 
 		return json;
 	}
@@ -247,7 +212,6 @@ public class OkHttpUtil {
 	 */
 	public String doPostJsonAsyn(String uri, String jsonObj) throws IOException {
 		RequestBody requestBody = RequestBody.create(JSON_CONTENT_TYPE_UTF8, jsonObj);
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().url(uri).post(requestBody).build();
 		Call call = client.newCall(request);
 		call.enqueue(new Callback() {
@@ -265,10 +229,6 @@ public class OkHttpUtil {
 		});
 		String json = "success";
 
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
-
 		return json;
 	}
 
@@ -284,7 +244,6 @@ public class OkHttpUtil {
 	 * @throws IOException
 	 */
 	public String doPostWithBodyAndHeader(String uri, RequestBody formBody, Headers headers) throws IOException {
-		log.debug("========= Call [{}] Start ==========", uri);
 		Request request = new Request.Builder().headers(headers).url(uri).post(formBody).build();
 
 		Response response = client.newCall(request).execute();
@@ -293,10 +252,6 @@ public class OkHttpUtil {
 
 		String json = null;
 		json = response.body().string();
-
-		log.debug("Payload :{}", json);
-
-		log.debug("========= Call [{}] End ==========", uri);
 
 		return json;
 	}

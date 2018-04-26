@@ -102,8 +102,6 @@ public class BaiduHttpService {
 			body.put("FP_UID", "0b58c206c9faa8349576163341ef1321");
 			body.put("traceid", baiduClient.getTraceid());
 
-			System.out.println(body);
-
 			RequestBody formBody = null;
 
 			FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
@@ -121,7 +119,6 @@ public class BaiduHttpService {
 			String okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_LOGIN_URL, formBody,
 					headers);
 			JSONObject json = JSONObject.parseObject(okHttpRes);
-			System.out.println(json);
 			JSONObject errorInfo = json.getJSONObject("errInfo");
 			String errNo = (String) errorInfo.get("no");
 			JSONObject data = json.getJSONObject("data");
@@ -175,8 +172,6 @@ public class BaiduHttpService {
 			baidu.setName(baiduDto.getName());
 			baidu.setNameShow(baiduDto.getNameShow());
 			baidu.setSex(baiduDto.getSex());
-//			baiduDto.setPtoken(baidu.getPtoken());
-//			baiduDto.setStoken(baidu.getStoken());
 			BaiduClientStore.bdClients.put(baiduDto.getUID(), baiduDto);
 			BaiduClientStore.currentActiveUid = baiduDto.getUID();
 			BaiduClientStore.currentActiveBaiduDto = baiduDto;
@@ -291,7 +286,6 @@ public class BaiduHttpService {
 
 		String result = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_TIEBA_LOGIN_URL, formBody,
 				headers);
-		System.out.println("贴吧登陆结果：" + result);
 		JSONObject json = JSONObject.parseObject(result);
 		JSONObject user = json.getJSONObject("user");
 		JSONObject anti = json.getJSONObject("anti");

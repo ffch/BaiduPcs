@@ -350,7 +350,6 @@ public class PhoneModelDict {
         char [] chs = code.toCharArray();  
         for (int i = 0; i < chs.length; i++) {             
             int num = chs[i] - '0';     // ascii to num  
-            //System.out.println(num);  
             /*(1)将奇数位数字相加(从1开始计数)*/  
             if (i%2==0) {  
                 sum1 = sum1 + num;  

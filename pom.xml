@@ -26,11 +26,6 @@
 			<artifactId>okhttp</artifactId>
 			<version>3.9.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15 -->
 		<dependency>

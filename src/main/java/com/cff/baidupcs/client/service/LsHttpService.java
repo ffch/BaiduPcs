@@ -45,7 +45,6 @@ public class LsHttpService {
 		}
 		List<PcsFileDto> pcsFileDtos = new ArrayList<PcsFileDto>();
 		String res = pcsClientService.prepareFilesDirectoriesList(path);
-		System.out.println("百度网盘发来贺电"+res);
 		JSONObject json = JSONObject.parseObject(res);
 		if(json == null)return null;
 		JSONArray ja = json.getJSONArray("list");
