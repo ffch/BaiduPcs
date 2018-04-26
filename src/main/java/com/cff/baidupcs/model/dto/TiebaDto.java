@@ -1,4 +1,4 @@
-package com.cff.baidupcs.model;
+package com.cff.baidupcs.model.dto;
 
 import java.util.List;
 

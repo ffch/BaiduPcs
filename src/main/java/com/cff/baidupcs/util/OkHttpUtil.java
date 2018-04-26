@@ -28,8 +28,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class OkHttpUtils {
-	private final Logger log = LoggerFactory.getLogger(OkHttpUtils.class.getName());
+public class OkHttpUtil {
+	private final Logger log = LoggerFactory.getLogger(OkHttpUtil.class.getName());
 	private final int DEFAULT_TIMEOUT = 5000;
 	private static OkHttpClient client;
 	public static final MediaType FORM_CONTENT_TYPE_UTF8 = MediaType
@@ -40,10 +40,10 @@ public class OkHttpUtils {
 	private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
 	private static class OkHttpHolder {
-		private static OkHttpUtils instance = new OkHttpUtils();
+		private static OkHttpUtil instance = new OkHttpUtil();
 	}
 
-	public OkHttpUtils() {
+	public OkHttpUtil() {
 		ConnectionPool connectionPool = new ConnectionPool(100, 30, TimeUnit.MINUTES);
 		client = new OkHttpClient.Builder().connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS) // 设置连接超时
 				.readTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS) // 设置读超时
@@ -87,7 +87,7 @@ public class OkHttpUtils {
 		return OkHttpHolder.instance.cookieStore.get(httpUrl.host());
 	}
 
-	public static OkHttpUtils getInstance() {
+	public static OkHttpUtil getInstance() {
 		return OkHttpHolder.instance;
 	}
 

@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-
 public class StringUtil {
 	private static final String FOLDER_SEPARATOR = "/";
 
@@ -182,10 +180,9 @@ public class StringUtil {
 	}
 	
 	public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix) {
-		if (CollectionUtils.isEmpty(coll)) {
+		if(coll == null || coll.size() < 1){
 			return "";
 		}
-
 		StringBuilder sb = new StringBuilder();
 		Iterator<?> it = coll.iterator();
 		while (it.hasNext()) {

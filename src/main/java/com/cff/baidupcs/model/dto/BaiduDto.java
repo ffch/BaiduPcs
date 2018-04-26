@@ -1,4 +1,4 @@
-package com.cff.baidupcs.model;
+package com.cff.baidupcs.model.dto;
 
 public class BaiduDto {
 	String UID;  // 百度ID对应的uid

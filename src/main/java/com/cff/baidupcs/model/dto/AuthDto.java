@@ -1,4 +1,4 @@
-package com.cff.baidupcs.model;
+package com.cff.baidupcs.model.dto;
 
 public class AuthDto {
 	String bduss;   // 百度BDUSS

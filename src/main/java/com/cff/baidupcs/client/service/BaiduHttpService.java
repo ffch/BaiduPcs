@@ -1,4 +1,4 @@
-package com.cff.baidupcs.Service;
+package com.cff.baidupcs.client.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -13,20 +13,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cff.baidupcs.client.BaiduClient;
 import com.cff.baidupcs.client.BaiduLoginRes;
 import com.cff.baidupcs.common.Constant;
-import com.cff.baidupcs.common.PhoneModelDict;
-import com.cff.baidupcs.model.AuthDto;
-import com.cff.baidupcs.model.BaiduDto;
-import com.cff.baidupcs.model.TiebaDto;
-import com.cff.baidupcs.store.BaiduClientStore;
+import com.cff.baidupcs.model.dict.PhoneModelDict;
+import com.cff.baidupcs.model.dto.AuthDto;
+import com.cff.baidupcs.model.dto.BaiduDto;
+import com.cff.baidupcs.model.dto.TiebaDto;
+import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.Md5Util;
-import com.cff.baidupcs.util.OkHttpUtils;
+import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.RsaUtil;
 import com.cff.baidupcs.util.StringUtil;
 
-import net.sf.json.JSONObject;
 import okhttp3.Cookie;
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -37,8 +37,19 @@ import okhttp3.Response;
 
 public class BaiduHttpService {
 	static Charset UTF_8 = Charset.forName("UTF-8");
+	BaiduClient baiduClient = null;
 
-	public static BaiduDto baiduLogin(BaiduClient baiduClient) {
+	public BaiduHttpService() {
+		baiduClient = new BaiduClient();
+	}
+
+	public BaiduDto login() {
+		BaiduDto baiduDto = baiduLogin();
+		BaiduHttpService.setBduus(baiduDto);
+		return baiduDto;
+	}
+
+	public BaiduDto baiduLogin() {
 
 		try {
 			String enPasswd = RsaUtil.encrypt(
@@ -84,9 +95,9 @@ public class BaiduHttpService {
 					.add("Accept", "application/json").add("Referer", "https://wappass.baidu.com/")
 					.add("X-Requested-With", "XMLHttpRequest").add("Connection", "keep-alive").build();
 
-			String okHttpRes = OkHttpUtils.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_LOGIN_URL, formBody,
+			String okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_LOGIN_URL, formBody,
 					headers);
-			JSONObject json = JSONObject.fromObject(okHttpRes);
+			JSONObject json = JSONObject.parseObject(okHttpRes);
 			System.out.println(json);
 			JSONObject errorInfo = json.getJSONObject("errInfo");
 			String errNo = (String) errorInfo.get("no");
@@ -102,10 +113,10 @@ public class BaiduHttpService {
 				Scanner scan = new Scanner(System.in);
 				String verifycode = scan.nextLine();
 				baiduClient.setVerifycode(verifycode.trim());
-				return baiduLogin(baiduClient);
+				return baiduLogin();
 			case "0":
-				BaiduLoginRes baiduLoginRes = (BaiduLoginRes) JSONObject.toBean(data, BaiduLoginRes.class);
-				List<Cookie> cookies = OkHttpUtils.getCookie(HttpUrl.parse(Constant.BAIDU_LOGIN_URL));
+				BaiduLoginRes baiduLoginRes = (BaiduLoginRes) JSONObject.toJavaObject(data, BaiduLoginRes.class);
+				List<Cookie> cookies = OkHttpUtil.getCookie(HttpUrl.parse(Constant.BAIDU_LOGIN_URL));
 				BaiduDto baiduDto = new BaiduDto();
 				for (int i = 0; i < cookies.size(); i++) {
 					Cookie cookie = cookies.get(i);
@@ -170,8 +181,8 @@ public class BaiduHttpService {
 	private static void getUserInfoByName(TiebaDto tiebaDto) throws NoSuchAlgorithmException, IOException {
 		String name = tiebaDto.getBaidu().getName();
 		String urlStr = "http://tieba.baidu.com/home/get/panel?un=" + name;
-		String okHttpRes = OkHttpUtils.getInstance().doGetWithJsonResult(urlStr);
-		JSONObject json = JSONObject.fromObject(okHttpRes);
+		String okHttpRes = OkHttpUtil.getInstance().doGetWithJsonResult(urlStr);
+		JSONObject json = JSONObject.parseObject(okHttpRes);
 		JSONObject data = json.getJSONObject("data");
 		if (data.get("id") != null && !"".equals(data.getString("id"))) {
 			tiebaDto.getBaidu().setUID(data.getString("id"));
@@ -188,8 +199,8 @@ public class BaiduHttpService {
 		rawQuery += Md5Util.encodeByMd5(signRaw.toString()).toUpperCase();
 
 		String urlStr = "http://c.tieba.baidu.com/c/u/user/profile?" + rawQuery;
-		String okHttpRes = OkHttpUtils.getInstance().doGetWithJsonResult(urlStr);
-		JSONObject json = JSONObject.fromObject(okHttpRes);
+		String okHttpRes = OkHttpUtil.getInstance().doGetWithJsonResult(urlStr);
+		JSONObject json = JSONObject.parseObject(okHttpRes);
 		JSONObject user = json.getJSONObject("user");
 		tiebaDto.getBaidu().setName(user.getString("name"));
 		tiebaDto.getBaidu().setNameShow(user.getString("name_show"));
@@ -250,10 +261,10 @@ public class BaiduHttpService {
 		}
 		formBody = formEncodingBuilder.build();
 
-		String result = OkHttpUtils.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_TIEBA_LOGIN_URL, formBody,
+		String result = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_TIEBA_LOGIN_URL, formBody,
 				headers);
 		System.out.println("贴吧登陆结果：" + result);
-		JSONObject json = JSONObject.fromObject(result);
+		JSONObject json = JSONObject.parseObject(result);
 		JSONObject user = json.getJSONObject("user");
 		JSONObject anti = json.getJSONObject("anti");
 

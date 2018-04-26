@@ -1,28 +1,13 @@
 package com.cff.baidupcs.client;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import com.alibaba.fastjson.JSONObject;
 import com.cff.baidupcs.common.Constant;
-import com.cff.baidupcs.util.OkHttpUtils;
-import com.cff.baidupcs.util.RsaUtil;
-import com.cff.baidupcs.util.RsaUtilOld;
+import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
-
-import net.sf.json.JSONObject;
-import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class BaiduClient {
@@ -37,7 +22,7 @@ public class BaiduClient {
 	private static OkHttpClient client;
 	
 	public BaiduClient(){
-		client = OkHttpUtils.getInstance().getClient();
+		client = OkHttpUtil.getInstance().getClient();
 		try {
 			getBaiduServerTime();
 			getBaiduRSAPublicKeyModulus();
@@ -48,15 +33,15 @@ public class BaiduClient {
 	}
 	
 	public void getBaiduServerTime() throws IOException{
-		String rs = OkHttpUtils.getInstance().doGetWithJsonResult(Constant.BAIDU_SERVERTIME_URL);
+		String rs = OkHttpUtil.getInstance().doGetWithJsonResult(Constant.BAIDU_SERVERTIME_URL);
 		System.out.println(rs);
-		JSONObject json = JSONObject.fromObject(rs);
+		JSONObject json = JSONObject.parseObject(rs);
 		serverTime = json.getString("time");
 		if(StringUtil.isEmpty(serverTime))serverTime="e362bacbae";
 	}
 	
 	public void getBaiduRSAPublicKeyModulus() throws IOException{
-		String rs = OkHttpUtils.getInstance().doGetWithJsonResult(Constant.BAIDU_RSA_URL);
+		String rs = OkHttpUtil.getInstance().doGetWithJsonResult(Constant.BAIDU_RSA_URL);
 		System.out.println(rs);
 		Pattern pattern = Pattern.compile(",rsa:\"(.*?)\",error:");
 		Matcher matcher = pattern.matcher(rs);
@@ -70,7 +55,7 @@ public class BaiduClient {
 	}
 	
 	public void getTraceID() throws IOException{
-		Response response = OkHttpUtils.getInstance().doGetWithResponse(Constant.BAIDU_TRACEID_URL);
+		Response response = OkHttpUtil.getInstance().doGetWithResponse(Constant.BAIDU_TRACEID_URL);
 		traceid = response.header("Trace-Id");
 		response.close();
 		System.out.println(traceid);

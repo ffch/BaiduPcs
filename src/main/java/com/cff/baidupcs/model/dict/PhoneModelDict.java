@@ -1,4 +1,4 @@
-package com.cff.baidupcs.common;
+package com.cff.baidupcs.model.dict;
 
 public class PhoneModelDict {
 	public static String[] phoneModelDataBase = new String[]{
