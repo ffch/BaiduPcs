@@ -12,6 +12,12 @@ public class SystemUtil {
 		return inStr;
 	}
 	
+	public static String getIn(String msg){
+		System.out.print(msg);
+		String inStr = scan.nextLine();
+		return inStr;
+	}
+	
 	public static void logInfo(String msg){
 		System.out.println("[ " + DateUtil.format(new Date(), DateUtil.FullDatePattern) + " ] ## " +  msg);
 	}

@@ -14,7 +14,7 @@ import com.cff.baidupcs.model.dto.OpsParamDto;
 import com.cff.baidupcs.util.SystemUtil;
 
 public class PcsLsSystem implements OperateSystem {
-	public List<Integer> allow = Arrays.asList(1,2,4,3); 
+	public List<Integer> allow = Arrays.asList(0,1,2,4); 
 	static Map<String,OpsParamDto> opsParams = new ConcurrentHashMap<String,OpsParamDto>();
 	static {
 		opsParams.put("-f", new OpsParamDto(1,"",true));
@@ -26,7 +26,7 @@ public class PcsLsSystem implements OperateSystem {
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
 			OpsParamDto tmp = opsParams.get(command[i]);
-			if(tmp == null)i++;
+			if(tmp == null)continue;
 			if(tmp.getIsValue()){
 				if(i == command.length-1 ){
 					SystemUtil.logError("参数错误！");
@@ -42,17 +42,25 @@ public class PcsLsSystem implements OperateSystem {
 		if(!checkAllow(value)){
 			SystemUtil.logError("参数不是这样用的！");
 		}
-		
-		for (String key : opsParamsTmp.keySet()) {
-			switch(key){
-				case "-f":
-					LsHttpService lsHttpService = new LsHttpService();
-					lsHttpService.runLs(opsParamsTmp.get(key));
-					break;
-				default:
-					break;
+		if(opsParamsTmp.size() < 1 ){
+			LsHttpService lsHttpService = new LsHttpService();
+			lsHttpService.runLs("/");
+		}else if(command.length == 2){
+			LsHttpService lsHttpService = new LsHttpService();
+			lsHttpService.runLs(command[1]);
+		}else{
+			for (String key : opsParamsTmp.keySet()) {
+				switch(key){
+					case "-f":
+						LsHttpService lsHttpService = new LsHttpService();
+						lsHttpService.runLs(opsParamsTmp.get(key));
+						break;
+					default:
+						break;
+				}
 			}
 		}
+		
 	}
 
 	public Boolean checkAllow(int value){

@@ -25,7 +25,7 @@ public class BaiduLoginSystem implements OperateSystem {
 		opsParams.put("-test", new OpsParamDto(1,true,false));
 		opsParams.put("-loc", new OpsParamDto(2,true,false));
 	}
-	public List<Integer> allow = Arrays.asList(1,2,4,3); 
+	public List<Integer> allow = Arrays.asList(0,1,2,4); 
 	@Override
 	public void ops(String[] command) throws Exception {
 		Map<String,String> opsParamsTmp = new HashMap<String,String>();
@@ -48,27 +48,37 @@ public class BaiduLoginSystem implements OperateSystem {
 		if(!checkAllow(value)){
 			SystemUtil.logError("参数不是这样用的！");
 		}
-		
-		for (String key : opsParamsTmp.keySet()) {
-			switch(key){
-				case "-test":
-					loadUser();
-			        BaiduHttpService baiduHttpService = new BaiduHttpService();
-					BaiduDto baiduDto = baiduHttpService.login();
-					SystemUtil.logLeft("百度账号登陆成功！");
-			        PcsClientService pcsClientService = new PcsClientService();
-			        pcsClientService.init(baiduDto);
-					break;
-				case "-loc":
-					BaiduDto baiduDtoFromFile = loadPcsInfo();
-					SystemUtil.logLeft("百度账号登陆成功！");
-			        PcsClientService pcsClientServiceLoc = new PcsClientService();
-			        pcsClientServiceLoc.initial(baiduDtoFromFile);
-					break;
-				default:
-					break;
+		if(opsParamsTmp.size() < 1){
+			Constant.userName = SystemUtil.getIn(" # 请输入用户名： ");
+			Constant.passwd = SystemUtil.getIn(" # 请输入密码： ");
+			BaiduHttpService baiduHttpService = new BaiduHttpService();
+			BaiduDto baiduDto = baiduHttpService.login();
+			SystemUtil.logLeft("百度账号登陆成功！");
+	        PcsClientService pcsClientService = new PcsClientService();
+	        pcsClientService.init(baiduDto);
+		}else{
+			for (String key : opsParamsTmp.keySet()) {
+				switch(key){
+					case "-test":
+						loadUser();
+				        BaiduHttpService baiduHttpService = new BaiduHttpService();
+						BaiduDto baiduDto = baiduHttpService.login();
+						SystemUtil.logLeft("百度账号登陆成功！");
+				        PcsClientService pcsClientService = new PcsClientService();
+				        pcsClientService.init(baiduDto);
+						break;
+					case "-loc":
+						BaiduDto baiduDtoFromFile = loadPcsInfo();
+						SystemUtil.logLeft("百度账号登陆成功！");
+				        PcsClientService pcsClientServiceLoc = new PcsClientService();
+				        pcsClientServiceLoc.initial(baiduDtoFromFile);
+						break;
+					default:
+						break;
+				}
 			}
 		}
+	
 	}
 
 	public Boolean checkAllow(int value){
