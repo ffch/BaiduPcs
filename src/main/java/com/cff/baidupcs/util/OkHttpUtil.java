@@ -1,6 +1,7 @@
 package com.cff.baidupcs.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class OkHttpUtil {
 
 	private static class OkHttpHolder {
 		private static OkHttpUtil instance = new OkHttpUtil();
+		private static OkHttpUtil simpleInstance = new OkHttpUtil(true);
 	}
 
 	public OkHttpUtil() {
@@ -43,6 +45,24 @@ public class OkHttpUtil {
 				.readTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS) // 设置读超时
 				.writeTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS) // 设置写超时
 				.retryOnConnectionFailure(true) // 是否自动重连
+				.connectionPool(connectionPool).cookieJar(new CookieJar() {
+					@Override
+					public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
+						cookieStore.put(httpUrl.host(), list);
+
+					}
+
+					@Override
+					public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+						List<Cookie> cookies = cookieStore.get(httpUrl.host());
+						return cookies != null ? cookies : new ArrayList<Cookie>();
+					}
+				}).build();
+	}
+
+	public OkHttpUtil(boolean b) {
+		ConnectionPool connectionPool = new ConnectionPool(20, 30, TimeUnit.MINUTES);
+		client = new OkHttpClient.Builder().retryOnConnectionFailure(true) // 是否自动重连
 				.connectionPool(connectionPool).cookieJar(new CookieJar() {
 					@Override
 					public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
@@ -75,7 +95,13 @@ public class OkHttpUtil {
 	}
 
 	public static OkHttpUtil getInstance() {
+		SystemUtil.logDebug("okhttp被调用了。");
 		return OkHttpHolder.instance;
+	}
+	
+	public static OkHttpUtil getSimpleInstance() {
+		SystemUtil.logDebug("Simple okhttp被调用了。");
+		return OkHttpHolder.simpleInstance;
 	}
 
 	public OkHttpClient getClient() {
@@ -99,6 +125,24 @@ public class OkHttpUtil {
 		String json = null;
 		json = response.body().string();
 		return json;
+	}
+	
+	/**
+	 * 发送get请求
+	 * 
+	 * @param uri
+	 * @return 返回结果
+	 * @throws IOException
+	 */
+	public InputStream doGetWithStream(String uri, Headers headers) throws IOException {
+		Request request = new Request.Builder().url(uri).headers(headers).build();
+
+		Response response = client.newCall(request).execute();
+		if (!response.isSuccessful())
+			throw new IOException("Unexpected code " + response);
+
+		
+		return response.body().byteStream();
 	}
 
 	/**
@@ -267,6 +311,16 @@ public class OkHttpUtil {
 		json = response.body().string();
 
 		return json;
+	}
+	
+	public Map<String, List<String>> doHeadWithHeader(String uri, Headers headers) throws IOException{
+		Request request = new Request.Builder().url(uri).head().build();//.headers(headers)
+
+		Response response = client.newCall(request).execute();
+		if (!response.isSuccessful())
+			throw new IOException("Unexpected code " + response);
+		Map<String, List<String>> maps = response.headers().toMultimap();
+		return maps;
 	}
 
 	@Test

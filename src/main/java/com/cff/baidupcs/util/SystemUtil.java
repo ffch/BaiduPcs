@@ -21,6 +21,11 @@ public class SystemUtil {
 	public static void logInfo(String msg) {
 		System.out.println("[ " + DateUtil.format(new Date(), DateUtil.FullDatePattern) + " ] ## " + msg);
 	}
+	
+	public static void logInfo(Object msg) {
+		System.out.println("[ " + DateUtil.format(new Date(), DateUtil.FullDatePattern) + " ] ## " + msg.toString());
+	}
+
 
 	public static void logLeft(String msg) {
 		System.out.println(" ## " + msg);
@@ -32,5 +37,13 @@ public class SystemUtil {
 
 	public static void logError(String msg) {
 		System.err.println("[ " + DateUtil.format(new Date(), DateUtil.FullDatePattern) + " ] ## " + msg);
+	}
+	
+	public static void sleep(int nSecond) {
+		try {
+			Thread.sleep(nSecond);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
