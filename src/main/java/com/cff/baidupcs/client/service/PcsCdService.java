@@ -13,6 +13,7 @@ import com.cff.baidupcs.model.dto.PcsFileDto;
 import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
+import com.cff.baidupcs.util.SystemUtil;
 
 public class PcsCdService {
 	PcsClientService pcsClientService;
@@ -20,7 +21,7 @@ public class PcsCdService {
 	public PcsCdService(PcsClientService pcsClientService) {
 		this.pcsClientService = pcsClientService;
 	}
-	
+
 	public PcsCdService() {
 		this.pcsClientService = new PcsClientService();
 	}
@@ -32,15 +33,18 @@ public class PcsCdService {
 		if (!path.startsWith("/")) {
 			path = StringUtil.cleanPath(workDir + "/" + path);
 		}
-		
-		try {
-			PcsFileDto pcsFileDto = pcsClientService.filesDirectoriesMeta(path).get(0);
-			if(pcsFileDto.getIsDir() > 0){
-				workDir = path;
-				baiduDto.setWorkdir(workDir);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		List<PcsFileDto> pcsFileDtos = pcsClientService.filesDirectoriesMeta(path);
+		if (pcsFileDtos == null) {
+			SystemUtil.logError("路径不存在！");
+			return;
+		}
+		PcsFileDto pcsFileDto = pcsFileDtos.get(0);
+		if (pcsFileDto.getIsDir() > 0) {
+			workDir = path;
+			baiduDto.setWorkdir(workDir);
+		} else {
+			SystemUtil.logError("路径不能是文件！");
 		}
 	}
 
@@ -54,9 +58,10 @@ public class PcsCdService {
 		List<PcsFileDto> pcsFileDtos = new ArrayList<PcsFileDto>();
 		String res = pcsClientService.prepareFilesDirectoriesList(path);
 		JSONObject json = JSONObject.parseObject(res);
-		if(json == null)return null;
+		if (json == null)
+			return null;
 		JSONArray ja = json.getJSONArray("list");
-		for(Object tmp : ja){
+		for (Object tmp : ja) {
 			JSONObject jobj = (JSONObject) tmp;
 			PcsFileDto pcsFileDto = (PcsFileDto) JSONObject.toJavaObject(jobj, PcsFileDto.class);
 			pcsFileDtos.add(pcsFileDto);
@@ -64,5 +69,4 @@ public class PcsCdService {
 		return pcsFileDtos;
 	}
 
-	
 }

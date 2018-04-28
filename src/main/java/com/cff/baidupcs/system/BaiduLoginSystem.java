@@ -20,72 +20,74 @@ import com.cff.baidupcs.util.SystemUtil;
 import okhttp3.Cookie;
 
 public class BaiduLoginSystem implements OperateSystem {
-	static Map<String,OpsParamDto> opsParams = new ConcurrentHashMap<String,OpsParamDto>();
+	static Map<String, OpsParamDto> opsParams = new ConcurrentHashMap<String, OpsParamDto>();
 	static {
-		opsParams.put("-test", new OpsParamDto(1,true,false));
-		opsParams.put("-loc", new OpsParamDto(2,true,false));
+		opsParams.put("-test", new OpsParamDto(1, true, false));
+		opsParams.put("-loc", new OpsParamDto(2, true, false));
 	}
-	public List<Integer> allow = Arrays.asList(0,1,2,4); 
+	public List<Integer> allow = Arrays.asList(0, 1, 2, 4);
+
 	@Override
 	public void ops(String[] command) throws Exception {
-		Map<String,String> opsParamsTmp = new HashMap<String,String>();
+		Map<String, String> opsParamsTmp = new HashMap<String, String>();
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
 			OpsParamDto tmp = opsParams.get(command[i]);
-			if(tmp == null)i++;
-			if(tmp.getIsValue()){
-				if(i == command.length-1 ){
+			if (tmp == null)
+				i++;
+			if (tmp.getIsValue()) {
+				if (i == command.length - 1) {
 					SystemUtil.logError("参数错误！");
 					return;
 				}
-				opsParamsTmp.put(command[i], command[i+1]);
+				opsParamsTmp.put(command[i], command[i + 1]);
 				i++;
-			}else{
+			} else {
 				opsParamsTmp.put(command[i], "");
 			}
 			value += tmp.getNo();
 		}
-		if(!checkAllow(value)){
+		if (!checkAllow(value)) {
 			SystemUtil.logError("参数不是这样用的！");
 		}
-		if(opsParamsTmp.size() < 1){
+		if (opsParamsTmp.size() < 1) {
 			Constant.userName = SystemUtil.getIn(" # 请输入用户名： ");
 			Constant.passwd = SystemUtil.getIn(" # 请输入密码： ");
 			BaiduHttpService baiduHttpService = new BaiduHttpService();
 			BaiduDto baiduDto = baiduHttpService.login();
 			SystemUtil.logLeft("百度账号登陆成功！");
-	        PcsClientService pcsClientService = new PcsClientService();
-	        pcsClientService.init(baiduDto);
-		}else{
+			PcsClientService pcsClientService = new PcsClientService();
+			pcsClientService.init(baiduDto);
+		} else {
 			for (String key : opsParamsTmp.keySet()) {
-				switch(key){
-					case "-test":
-						loadUser();
-				        BaiduHttpService baiduHttpService = new BaiduHttpService();
-						BaiduDto baiduDto = baiduHttpService.login();
-						SystemUtil.logLeft("百度账号登陆成功！");
-				        PcsClientService pcsClientService = new PcsClientService();
-				        pcsClientService.init(baiduDto);
-						break;
-					case "-loc":
-						BaiduDto baiduDtoFromFile = loadPcsInfo();
-						SystemUtil.logLeft("百度账号登陆成功！");
-				        PcsClientService pcsClientServiceLoc = new PcsClientService();
-				        pcsClientServiceLoc.initial(baiduDtoFromFile);
-						break;
-					default:
-						break;
+				switch (key) {
+				case "-test":
+					loadUser();
+					BaiduHttpService baiduHttpService = new BaiduHttpService();
+					BaiduDto baiduDto = baiduHttpService.login();
+					SystemUtil.logLeft("百度账号登陆成功！");
+					PcsClientService pcsClientService = new PcsClientService();
+					pcsClientService.init(baiduDto);
+					break;
+				case "-loc":
+					BaiduDto baiduDtoFromFile = loadPcsInfo();
+					SystemUtil.logLeft("百度账号登陆成功！");
+					PcsClientService pcsClientServiceLoc = new PcsClientService();
+					pcsClientServiceLoc.initial(baiduDtoFromFile);
+					break;
+				default:
+					break;
 				}
 			}
 		}
-	
+
 	}
 
-	public Boolean checkAllow(int value){
+	public Boolean checkAllow(int value) {
 		return allow.contains(value);
 	}
-	
-	public BaiduDto loadPcsInfo() throws IOException{
+
+	public BaiduDto loadPcsInfo() throws IOException {
 		Properties properties = new Properties();
 		InputStream in = new FileInputStream("D:\\PcsLogin.txt");
 		properties.load(in);
@@ -99,8 +101,8 @@ public class BaiduLoginSystem implements OperateSystem {
 		baiduDto.setNameShow(properties.getProperty("nameshow"));
 		return baiduDto;
 	}
-	
-	public void loadUser() throws IOException{
+
+	public void loadUser() throws IOException {
 		Properties properties = new Properties();
 		InputStream in = new FileInputStream("D:\\BDLogin.txt");
 		properties.load(in);

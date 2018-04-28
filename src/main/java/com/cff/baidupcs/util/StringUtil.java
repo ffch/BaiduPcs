@@ -14,18 +14,18 @@ public class StringUtil {
 	private static final String TOP_PATH = "..";
 
 	private static final String CURRENT_PATH = ".";
-	
-	public static Boolean isEmpty(String data){
-		if(data == null || "".equals(data.trim())){
+
+	public static Boolean isEmpty(String data) {
+		if (data == null || "".equals(data.trim())) {
 			return true;
 		}
 		return false;
 	}
-	
-	public static String stringReverse(String src){
+
+	public static String stringReverse(String src) {
 		return new StringBuilder(src).reverse().toString();
 	}
-	
+
 	public static String cleanPath(String path) {
 		if (path == null) {
 			return null;
@@ -42,8 +42,7 @@ public class StringUtil {
 			prefix = pathToUse.substring(0, prefixIndex + 1);
 			if (prefix.contains("/")) {
 				prefix = "";
-			}
-			else {
+			} else {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			}
 		}
@@ -60,17 +59,15 @@ public class StringUtil {
 			String element = pathArray[i];
 			if (CURRENT_PATH.equals(element)) {
 				// Points to current directory - drop it.
-			}
-			else if (TOP_PATH.equals(element)) {
+			} else if (TOP_PATH.equals(element)) {
 				// Registering top path found.
 				tops++;
-			}
-			else {
+			} else {
 				if (tops > 0) {
-					// Merging path element with element corresponding to top path.
+					// Merging path element with element corresponding to top
+					// path.
 					tops--;
-				}
-				else {
+				} else {
 					// Normal path element found.
 					pathElements.add(0, element);
 				}
@@ -82,11 +79,12 @@ public class StringUtil {
 			pathElements.add(0, TOP_PATH);
 		}
 
-		String res =  prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
-		if(res.startsWith("//"))return res.replaceFirst("//", "/");
+		String res = prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
+		if (res.startsWith("//"))
+			return res.replaceFirst("//", "/");
 		return res;
 	}
-	
+
 	public static String replace(String inString, String oldPattern, String newPattern) {
 		if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null) {
 			return inString;
@@ -103,7 +101,7 @@ public class StringUtil {
 		}
 		StringBuilder sb = new StringBuilder(capacity);
 
-		int pos = 0;  // our position in the old string
+		int pos = 0; // our position in the old string
 		int patLen = oldPattern.length();
 		while (index >= 0) {
 			sb.append(inString.substring(pos, index));
@@ -116,21 +114,21 @@ public class StringUtil {
 		sb.append(inString.substring(pos));
 		return sb.toString();
 	}
-	
+
 	public static boolean hasLength(String str) {
 		return (str != null && !str.isEmpty());
 	}
-	
+
 	public static String[] delimitedListToStringArray(String str, String delimiter) {
 		return delimitedListToStringArray(str, delimiter, null);
 	}
-	
+
 	public static String[] delimitedListToStringArray(String str, String delimiter, String charsToDelete) {
 		if (str == null) {
 			return new String[0];
 		}
 		if (delimiter == null) {
-			return new String[] {str};
+			return new String[] { str };
 		}
 
 		List<String> result = new ArrayList<String>();
@@ -138,8 +136,7 @@ public class StringUtil {
 			for (int i = 0; i < str.length(); i++) {
 				result.add(deleteAny(str.substring(i, i + 1), charsToDelete));
 			}
-		}
-		else {
+		} else {
 			int pos = 0;
 			int delPos;
 			while ((delPos = str.indexOf(delimiter, pos)) != -1) {
@@ -153,7 +150,7 @@ public class StringUtil {
 		}
 		return toStringArray(result);
 	}
-	
+
 	public static String deleteAny(String inString, String charsToDelete) {
 		if (!hasLength(inString) || !hasLength(charsToDelete)) {
 			return inString;
@@ -176,13 +173,13 @@ public class StringUtil {
 
 		return collection.toArray(new String[collection.size()]);
 	}
-	
+
 	public static String collectionToDelimitedString(Collection<?> coll, String delim) {
 		return collectionToDelimitedString(coll, delim, "", "");
 	}
-	
+
 	public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix) {
-		if(coll == null || coll.size() < 1){
+		if (coll == null || coll.size() < 1) {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();

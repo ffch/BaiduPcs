@@ -47,12 +47,12 @@ public class PcsClientService {
 		String okHttpRes = OkHttpUtil.getInstance().doGetWithJsonResult(url);
 		return okHttpRes;
 	}
-	
-	public List<PcsFileDto> filesDirectoriesMeta(String path) throws IOException{
+
+	public List<PcsFileDto> filesDirectoriesMeta(String path) {
 		if ("".equals(path)) {
 			path = "/";
 		}
-		
+
 		String subPath = "file";
 		String method = "meta";
 		String url = "://pcs.baidu.com/rest/2.0/pcs/" + subPath;
@@ -63,7 +63,7 @@ public class PcsClientService {
 		}
 		url = url + "?app_id=" + defaultAppID + "&method=" + method;
 		RequestBody formBody = null;
-		
+
 		Map<String, String> body = new HashMap<String, String>();
 		body.put("path", path);
 		FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
@@ -73,12 +73,18 @@ public class PcsClientService {
 			}
 		}
 		formBody = formEncodingBuilder.build();
-		String okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(url, formBody);
+		String okHttpRes = "";
+		try {
+			okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(url, formBody);
+		} catch (Exception e) {
+			return null;
+		}
 		JSONObject json = JSONObject.parseObject(okHttpRes);
-		if(json == null)return null;
+		if (json == null)
+			return null;
 		List<PcsFileDto> pcsFileDtos = new ArrayList<PcsFileDto>();
 		JSONArray ja = json.getJSONArray("list");
-		for(Object tmp : ja){
+		for (Object tmp : ja) {
 			JSONObject jobj = (JSONObject) tmp;
 			PcsFileDto pcsFileDto = (PcsFileDto) JSONObject.toJavaObject(jobj, PcsFileDto.class);
 			pcsFileDtos.add(pcsFileDto);

@@ -20,7 +20,7 @@ public class LsHttpService {
 	public LsHttpService(PcsClientService pcsClientService) {
 		this.pcsClientService = pcsClientService;
 	}
-	
+
 	public LsHttpService() {
 		this.pcsClientService = new PcsClientService();
 	}
@@ -28,7 +28,7 @@ public class LsHttpService {
 	public void runLs(String path) {
 		try {
 			List<PcsFileDto> pcsFileDtos = getPcsPath(path);
-			for(PcsFileDto pcsFileDto : pcsFileDtos){
+			for (PcsFileDto pcsFileDto : pcsFileDtos) {
 				System.out.println(pcsFileDto.getPath());
 			}
 		} catch (IOException e) {
@@ -46,9 +46,10 @@ public class LsHttpService {
 		List<PcsFileDto> pcsFileDtos = new ArrayList<PcsFileDto>();
 		String res = pcsClientService.prepareFilesDirectoriesList(path);
 		JSONObject json = JSONObject.parseObject(res);
-		if(json == null)return null;
+		if (json == null)
+			return null;
 		JSONArray ja = json.getJSONArray("list");
-		for(Object tmp : ja){
+		for (Object tmp : ja) {
 			JSONObject jobj = (JSONObject) tmp;
 			PcsFileDto pcsFileDto = (PcsFileDto) JSONObject.toJavaObject(jobj, PcsFileDto.class);
 			pcsFileDtos.add(pcsFileDto);
@@ -56,5 +57,4 @@ public class LsHttpService {
 		return pcsFileDtos;
 	}
 
-	
 }

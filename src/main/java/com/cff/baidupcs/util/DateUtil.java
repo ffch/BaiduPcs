@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * 日期工具类
+ * 
  * @version 1.0
  * @since 1.0
  */
@@ -17,18 +18,16 @@ public class DateUtil {
 
 	public static String SPECIAL_SEPARATE = "/";
 
-	public static DateFormat DEFAULT_FORMATTER = new SimpleDateFormat(
-			DEFAULT_FORMAT);
+	public static DateFormat DEFAULT_FORMATTER = new SimpleDateFormat(DEFAULT_FORMAT);
 
 	public static String DEFAULT_DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
-	public static DateFormat DEFAUTL_DATETIME_FORMATTER = new SimpleDateFormat(
-			DEFAULT_DATETIME_FORMAT);
-	
+	public static DateFormat DEFAUTL_DATETIME_FORMATTER = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
+
 	public static final String FullDatePattern = "yyyy-MM-dd HH:mm:ss";
-	
+
 	public static final String SimpleDatePattern = "yyyyMMdd";
-	
+
 	private DateUtil() {
 	}
 
@@ -154,13 +153,12 @@ public class DateUtil {
 	 * @param endDate
 	 *            the end date, not altered, not null
 	 * @return true if
-	 *         <code>compareDate &gt;= startDate && compareDate &lt;= endDate</code>,
-	 *         else false
+	 *         <code>compareDate &gt;= startDate && compareDate &lt;= endDate</code>
+	 *         , else false
 	 * @see {@link #le(Date, Date)}
 	 * @see {@link #ge(Date, Date)}
 	 */
-	public static boolean isBetween(Date compareDate, Date startDate,
-			Date endDate) {
+	public static boolean isBetween(Date compareDate, Date startDate, Date endDate) {
 		return le(endDate, compareDate) && ge(startDate, compareDate);
 	}
 
@@ -171,28 +169,21 @@ public class DateUtil {
 	 *            the first calendar, not altered, not null
 	 * @param compareCalendar
 	 *            the second calendar, not altered, not null
-	 * @return true if <code>compareCalendar > basicCalendar</code>, else
-	 *         false
+	 * @return true if <code>compareCalendar > basicCalendar</code>, else false
 	 * @throws IllegalArgumentException
 	 *             if either calendar is <code>null</code>
 	 */
-	public static boolean compareDate(Calendar basicCalendar,
-			Calendar compareCalendar) {
+	public static boolean compareDate(Calendar basicCalendar, Calendar compareCalendar) {
 		if (null == basicCalendar || null == compareCalendar) {
 			throw new IllegalArgumentException("The date must not be null.");
 		}
-		if (basicCalendar.get(Calendar.ERA) == compareCalendar
-				.get(Calendar.ERA)) {
-			if (basicCalendar.get(Calendar.YEAR) == compareCalendar
-					.get(Calendar.YEAR)) {
-				return (basicCalendar.get(Calendar.DAY_OF_YEAR) < compareCalendar
-						.get(Calendar.DAY_OF_YEAR));
+		if (basicCalendar.get(Calendar.ERA) == compareCalendar.get(Calendar.ERA)) {
+			if (basicCalendar.get(Calendar.YEAR) == compareCalendar.get(Calendar.YEAR)) {
+				return (basicCalendar.get(Calendar.DAY_OF_YEAR) < compareCalendar.get(Calendar.DAY_OF_YEAR));
 			}
-			return (basicCalendar.get(Calendar.YEAR) < compareCalendar
-					.get(Calendar.YEAR));
+			return (basicCalendar.get(Calendar.YEAR) < compareCalendar.get(Calendar.YEAR));
 		}
-		return (basicCalendar.get(Calendar.ERA) < compareCalendar
-				.get(Calendar.ERA));
+		return (basicCalendar.get(Calendar.ERA) < compareCalendar.get(Calendar.ERA));
 	}
 
 	/**
@@ -247,9 +238,8 @@ public class DateUtil {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
-				&& cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1
-				.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+		return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
 	}
 
 	/**
@@ -332,8 +322,8 @@ public class DateUtil {
 		}
 		return date1;
 	}
-    
-    /* 涓嬮潰鏂规硶鏄互绉掍负鍗曚綅鐨勬瘮杈� */
+
+	/* 涓嬮潰鏂规硶鏄互绉掍负鍗曚綅鐨勬瘮杈� */
 	/**
 	 * <p>
 	 * Checks if two date objects are on the same date.
@@ -390,7 +380,6 @@ public class DateUtil {
 		}
 		return cal1.equals(cal2);
 	}
-
 
 	/**
 	 * "greater than"
@@ -478,11 +467,10 @@ public class DateUtil {
 	public static boolean ge4Second(Date basicDate, Date compareDate) {
 		return gt4Second(basicDate, compareDate) || isSameSecond(basicDate, compareDate);
 	}
-	
+
 	public static boolean ge4Second(Calendar basicDate, Calendar compareDate) {
 		return gt4Second(basicDate, compareDate) || isSameSecond(basicDate, compareDate);
 	}
-
 
 	/**
 	 * "less than or equal"
@@ -504,7 +492,7 @@ public class DateUtil {
 	public static boolean le4Second(Date basicDate, Date compareDate) {
 		return lt4Second(basicDate, compareDate) || isSameSecond(basicDate, compareDate);
 	}
-	
+
 	public static boolean le4Second(Calendar basicDate, Calendar compareDate) {
 		return lt4Second(basicDate, compareDate) || isSameSecond(basicDate, compareDate);
 	}
@@ -526,7 +514,7 @@ public class DateUtil {
 	public static Calendar nowCal() {
 		return Calendar.getInstance();
 	}
-	
+
 	/**
 	 * 使用参数Format格式化Date成字符串
 	 * 
@@ -535,25 +523,23 @@ public class DateUtil {
 	public static String format(Date date, String pattern) {
 		return date == null ? "" : new SimpleDateFormat(pattern).format(date);
 	}
-	
+
 	/**
 	 * 使用参数Format将字符串转为Date
 	 * 
 	 * @return Date
 	 */
-	public static Date parse(String strDate, String pattern)
-			throws ParseException {
-		return StringUtil.isEmpty(strDate) ? null : new SimpleDateFormat(
-				pattern).parse(strDate);
+	public static Date parse(String strDate, String pattern) throws ParseException {
+		return StringUtil.isEmpty(strDate) ? null : new SimpleDateFormat(pattern).parse(strDate);
 	}
-	
+
 	/**
 	 * 将使用参数Format1格式化的日期字符串重新格式化丿 Format2格式化的字符串㿿
+	 * 
 	 * @author chenping
 	 * @return String
 	 */
-	public static String reformat(String strDate, String pattern1, String pattern2)
-			throws ParseException {
+	public static String reformat(String strDate, String pattern1, String pattern2) throws ParseException {
 		return format(parse(strDate, pattern1), pattern2);
 	}
 }

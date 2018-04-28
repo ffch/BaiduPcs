@@ -11,17 +11,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 public class BaiduClient {
-	String serverTime;           // 百度服务器时间, 形如 "e362bacbae"
+	String serverTime; // 百度服务器时间, 形如 "e362bacbae"
 	String rsaPublicKeyModulus;
-	String fpUID;               
+	String fpUID;
 	String traceid;
 	String serverTimeUrl = "";
 	String vcodestr = "";
 	String verifycode = "";
-	
+
 	private static OkHttpClient client;
-	
-	public BaiduClient(){
+
+	public BaiduClient() {
 		client = OkHttpUtil.getInstance().getClient();
 		try {
 			getBaiduServerTime();
@@ -31,58 +31,66 @@ public class BaiduClient {
 			e.printStackTrace();
 		}
 	}
-	
-	public void getBaiduServerTime() throws IOException{
+
+	public void getBaiduServerTime() throws IOException {
 		String rs = OkHttpUtil.getInstance().doGetWithJsonResult(Constant.BAIDU_SERVERTIME_URL);
 		JSONObject json = JSONObject.parseObject(rs);
 		serverTime = json.getString("time");
-		if(StringUtil.isEmpty(serverTime))serverTime="e362bacbae";
+		if (StringUtil.isEmpty(serverTime))
+			serverTime = "e362bacbae";
 	}
-	
-	public void getBaiduRSAPublicKeyModulus() throws IOException{
+
+	public void getBaiduRSAPublicKeyModulus() throws IOException {
 		String rs = OkHttpUtil.getInstance().doGetWithJsonResult(Constant.BAIDU_RSA_URL);
 		Pattern pattern = Pattern.compile(",rsa:\"(.*?)\",error:");
 		Matcher matcher = pattern.matcher(rs);
-		if(matcher.find()){
+		if (matcher.find()) {
 			rsaPublicKeyModulus = matcher.group(1);
-		}else{
+		} else {
 			rsaPublicKeyModulus = "B3C61EBBA4659C4CE3639287EE871F1F48F7930EA977991C7AFE3CC442FEA49643212E7D570C853F368065CC57A2014666DA8AE7D493FD47D171C0D894EEE3ED7F99F6798B7FFD7B5873227038AD23E3197631A8CB642213B9F27D4901AB0D92BFA27542AE890855396ED92775255C977F5C302F1E7ED4B1E369C12CB6B1822F";
 		}
-		
+
 	}
-	
-	public void getTraceID() throws IOException{
+
+	public void getTraceID() throws IOException {
 		Response response = OkHttpUtil.getInstance().doGetWithResponse(Constant.BAIDU_TRACEID_URL);
 		traceid = response.header("Trace-Id");
-		response.close();		
+		response.close();
 	}
-	
+
 	public String getServerTime() {
 		return serverTime;
 	}
+
 	public void setServerTime(String serverTime) {
 		this.serverTime = serverTime;
 	}
+
 	public String getRsaPublicKeyModulus() {
 		return rsaPublicKeyModulus;
 	}
+
 	public void setRsaPublicKeyModulus(String rsaPublicKeyModulus) {
 		this.rsaPublicKeyModulus = rsaPublicKeyModulus;
 	}
+
 	public String getFpUID() {
 		return fpUID;
 	}
+
 	public void setFpUID(String fpUID) {
 		this.fpUID = fpUID;
 	}
+
 	public String getTraceid() {
 		return traceid;
 	}
+
 	public void setTraceid(String traceid) {
 		this.traceid = traceid;
 	}
-	
-	public OkHttpClient getClient(){
+
+	public OkHttpClient getClient() {
 		return client;
 	}
 

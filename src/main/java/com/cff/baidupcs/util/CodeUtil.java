@@ -43,8 +43,8 @@ public class CodeUtil {
 		}
 		return dest;
 	}
-	
-	public static void main(){
-		
+
+	public static void main() {
+
 	}
 }

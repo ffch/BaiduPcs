@@ -17,63 +17,64 @@ import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.SystemUtil;
 
 public class PcsCdSystem implements OperateSystem {
-	public List<Integer> allow = Arrays.asList(0,1,2,4); 
-	static Map<String,OpsParamDto> opsParams = new ConcurrentHashMap<String,OpsParamDto>();
+	public List<Integer> allow = Arrays.asList(0, 1, 2, 4);
+	static Map<String, OpsParamDto> opsParams = new ConcurrentHashMap<String, OpsParamDto>();
 	static {
-		opsParams.put("-f", new OpsParamDto(1,"",true));
-		opsParams.put("-d", new OpsParamDto(2,true,false));
+		opsParams.put("-f", new OpsParamDto(1, "", true));
+		opsParams.put("-d", new OpsParamDto(2, true, false));
 	}
+
 	@Override
 	public void ops(String[] command) throws Exception {
 		BaiduDto baiduDto = BaiduClientStore.currentActiveBaiduDto;
 
 		String path = baiduDto.getWorkdir();
-		
-		Map<String,String> opsParamsTmp = new HashMap<String,String>();
+
+		Map<String, String> opsParamsTmp = new HashMap<String, String>();
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
 			OpsParamDto tmp = opsParams.get(command[i]);
-			if(tmp == null)continue;
-			if(tmp.getIsValue()){
-				if(i == command.length-1 ){
+			if (tmp == null)
+				continue;
+			if (tmp.getIsValue()) {
+				if (i == command.length - 1) {
 					SystemUtil.logError("参数错误！");
 					return;
 				}
-				opsParamsTmp.put(command[i], command[i+1]);
+				opsParamsTmp.put(command[i], command[i + 1]);
 				i++;
-			}else{
+			} else {
 				opsParamsTmp.put(command[i], "");
 			}
 			value += tmp.getNo();
 		}
-		if(!checkAllow(value)){
+		if (!checkAllow(value)) {
 			SystemUtil.logError("参数不是这样用的！");
 		}
-		
-		if(opsParamsTmp.size() < 1 ){
-			if(command.length == 2){
+
+		if (opsParamsTmp.size() < 1) {
+			if (command.length == 2) {
 				path = command[1];
 			}
 			PcsCdService pcsCdService = new PcsCdService();
 			pcsCdService.run(path);
-		}else{
+		} else {
 			for (String key : opsParamsTmp.keySet()) {
-				switch(key){
-					case "-f":
-						PcsCdService pcsCdService = new PcsCdService();
-						pcsCdService.run(opsParamsTmp.get(key));
-						break;
-					default:
-						break;
+				switch (key) {
+				case "-f":
+					PcsCdService pcsCdService = new PcsCdService();
+					pcsCdService.run(opsParamsTmp.get(key));
+					break;
+				default:
+					break;
 				}
 			}
 		}
-		
+
 	}
 
-	public Boolean checkAllow(int value){
+	public Boolean checkAllow(int value) {
 		return allow.contains(value);
 	}
-	
-	
+
 }

@@ -11,15 +11,15 @@ import com.cff.baidupcs.system.PcsCdSystem;
 import com.cff.baidupcs.system.PcsLsSystem;
 
 public class CommandDict {
-	static Map<String,OperateSystem> ops = new ConcurrentHashMap<String,OperateSystem>();	
+	static Map<String, OperateSystem> ops = new ConcurrentHashMap<String, OperateSystem>();
 	static {
 		ops.put("login", new BaiduLoginSystem());
 		ops.put("ls", new PcsLsSystem());
 		ops.put("download", new DownloadSystem());
 		ops.put("cd", new PcsCdSystem());
 	}
-	
-	public static OperateSystem getOperateSystem(String key){
+
+	public static OperateSystem getOperateSystem(String key) {
 		return ops.get(key);
 	}
 }

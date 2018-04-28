@@ -50,22 +50,22 @@ public class BaiduHttpService {
 	public BaiduDto login() {
 		BaiduDto baiduDto = baiduLogin();
 		BaiduHttpService.setBduus(baiduDto);
-		WriteStringToFile("D:\\PcsLogin.txt",baiduDto);
+		WriteStringToFile("D:\\PcsLogin.txt", baiduDto);
 
 		return baiduDto;
 	}
-	
-	public void WriteStringToFile(String filePath,BaiduDto baiduDto) {
+
+	public void WriteStringToFile(String filePath, BaiduDto baiduDto) {
 		try {
 			File file = new File(filePath);
 			PrintStream ps = new PrintStream(new FileOutputStream(file));
-			ps.println("bduss="+baiduDto.getBduss());// 往文件里写入字符串
-			ps.println("ptoken="+baiduDto.getPtoken());
-			ps.println("stoken="+baiduDto.getStoken());
-			ps.println("uid="+baiduDto.getUID());
-			ps.println("name="+baiduDto.getName());
-			ps.println("nameshow="+baiduDto.getNameShow());
-			ps.println("workdir="+baiduDto.getWorkdir());
+			ps.println("bduss=" + baiduDto.getBduss());// 往文件里写入字符串
+			ps.println("ptoken=" + baiduDto.getPtoken());
+			ps.println("stoken=" + baiduDto.getStoken());
+			ps.println("uid=" + baiduDto.getUID());
+			ps.println("name=" + baiduDto.getName());
+			ps.println("nameshow=" + baiduDto.getNameShow());
+			ps.println("workdir=" + baiduDto.getWorkdir());
 			ps.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -48,32 +48,41 @@ public class TiebaDto {
 	public void setPostNum(int postNum) {
 		this.postNum = postNum;
 	}
-	class Bar{
+
+	class Bar {
 		String fid; // 贴吧fid
 		String name; // 名字
 		String level; // 个人等级
 		int exp; // 个人经验
+
 		public String getFid() {
 			return fid;
 		}
+
 		public void setFid(String fid) {
 			this.fid = fid;
 		}
+
 		public String getName() {
 			return name;
 		}
+
 		public void setName(String name) {
 			this.name = name;
 		}
+
 		public String getLevel() {
 			return level;
 		}
+
 		public void setLevel(String level) {
 			this.level = level;
 		}
+
 		public int getExp() {
 			return exp;
 		}
+
 		public void setExp(int exp) {
 			this.exp = exp;
 		}
