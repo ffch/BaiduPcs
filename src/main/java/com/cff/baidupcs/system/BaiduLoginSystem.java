@@ -89,7 +89,7 @@ public class BaiduLoginSystem implements OperateSystem {
 
 	public BaiduDto loadPcsInfo() throws IOException {
 		Properties properties = new Properties();
-		InputStream in = new FileInputStream("D:\\PcsLogin.txt");
+		InputStream in = new FileInputStream(Constant.localPath + "PcsLogin.txt");
 		properties.load(in);
 		BaiduDto baiduDto = new BaiduDto();
 		baiduDto.setBduss(properties.getProperty("bduss"));
@@ -104,7 +104,7 @@ public class BaiduLoginSystem implements OperateSystem {
 
 	public void loadUser() throws IOException {
 		Properties properties = new Properties();
-		InputStream in = new FileInputStream("D:\\BDLogin.txt");
+		InputStream in = new FileInputStream(Constant.localPath + "BDLogin.txt");
 		properties.load(in);
 		Constant.userName = properties.getProperty("userName");
 		Constant.passwd = properties.getProperty("passwd");

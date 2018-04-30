@@ -50,7 +50,7 @@ public class BaiduHttpService {
 	public BaiduDto login() {
 		BaiduDto baiduDto = baiduLogin();
 		BaiduHttpService.setBduus(baiduDto);
-		WriteStringToFile("D:\\PcsLogin.txt", baiduDto);
+		WriteStringToFile(Constant.localPath + "PcsLogin.txt", baiduDto);
 
 		return baiduDto;
 	}

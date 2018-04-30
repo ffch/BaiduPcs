@@ -27,6 +27,7 @@ import okhttp3.Response;
 public class OkHttpUtil {
 	private final int DEFAULT_TIMEOUT = 5000;
 	private static OkHttpClient client;
+	private static OkHttpClient simpleClient;
 	public static final MediaType FORM_CONTENT_TYPE_UTF8 = MediaType
 			.parse("application/x-www-form-urlencoded; charset=utf-8");
 	public static final MediaType FORM_CONTENT_TYPE_GBK = MediaType
@@ -62,7 +63,7 @@ public class OkHttpUtil {
 
 	public OkHttpUtil(boolean b) {
 		ConnectionPool connectionPool = new ConnectionPool(20, 30, TimeUnit.MINUTES);
-		client = new OkHttpClient.Builder().retryOnConnectionFailure(true) // 是否自动重连
+		simpleClient = new OkHttpClient.Builder().retryOnConnectionFailure(true) // 是否自动重连
 				.connectionPool(connectionPool).cookieJar(new CookieJar() {
 					@Override
 					public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
