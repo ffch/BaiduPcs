@@ -30,6 +30,14 @@ public class SystemUtil {
 	public static void logLeft(String msg) {
 		System.out.println(" ## " + msg);
 	}
+	
+	public static void logClear(String msg) {
+		System.out.printf("\r%6s",msg);
+	}
+	
+	public static void logClear(String formatMsg,String format) {
+		System.out.printf(format,formatMsg);
+	}
 
 	public static void logDebug(String msg) {
 		System.out.println("---------" + msg);

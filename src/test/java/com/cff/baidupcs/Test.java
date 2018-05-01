@@ -8,8 +8,23 @@ public class Test {
 	public static ThreadLocal<Integer> threadLocal = new InheritableThreadLocal<Integer>();
 
 	public static void main(String args[]) {
-		String path = "//hashdashd";
-		SystemUtil.logInfo(StringUtil.cleanPath(path));
+		System.out.printf("\r%4s", "1%");
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.printf("\r%4s", "40%");
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.printf("\r%4s", "100%");
+//		String path = "//hashdashd";
+//		SystemUtil.logInfo(StringUtil.cleanPath(path));
 		// threadLocal.set(new Integer(123));
 		//
 		// Thread thread = new MyThread();

@@ -3,7 +3,9 @@ package com.cff.baidupcs.client.service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,6 +16,9 @@ import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
+
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 public class DownloadService {
 	PcsClientService pcsClientService;
@@ -44,7 +49,7 @@ public class DownloadService {
 			SystemUtil.logError("暂不支持路径下载！");
 			return;
 		}
-		
+		pcsClientService.downloadFile(path);
 	}
 
 	public List<PcsFileDto> getPcsPath(String path) throws IOException {

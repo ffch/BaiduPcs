@@ -9,5 +9,6 @@ public class Constant {
 	public static String userName = "";
 	public static String passwd = "";
 	public static String localPath = "H:/";
-
+	public static String localDownloadPath = "H:/download/";
+	public static int maxDownloadThread = 100;
 }

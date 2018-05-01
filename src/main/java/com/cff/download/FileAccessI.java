@@ -30,4 +30,12 @@ public class FileAccessI implements Serializable {
 		}
 		return n;
 	}
+
+	public void close() {
+		try {
+			oSavedFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

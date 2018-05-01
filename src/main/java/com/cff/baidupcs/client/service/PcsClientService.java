@@ -18,7 +18,10 @@ import com.cff.baidupcs.model.dto.BaiduDto;
 import com.cff.baidupcs.model.dto.PcsFileDto;
 import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.OkHttpUtil;
+import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
+import com.cff.download.SiteFileFetch;
+import com.cff.download.SiteInfoBean;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -46,6 +49,46 @@ public class PcsClientService {
 				+ "asc" + "&limit=" + "0-2147483647";
 		String okHttpRes = OkHttpUtil.getInstance().doGetWithJsonResult(url);
 		return okHttpRes;
+	}
+	
+	public void downloadFile(String path) {
+		if ("".equals(path)) {
+			return;
+		}
+		String fileName = path.substring(path.lastIndexOf("/")+1);
+		if(StringUtil.isEmpty(fileName))return;
+		String subPath = "file";
+		String method = "download";
+		String url = "://pcs.baidu.com/rest/2.0/pcs/" + subPath;
+		if (isHTTPS) {
+			url = "https" + url;
+		} else {
+			url = "http" + url;
+		}
+		url = url + "?app_id=" + defaultAppID + "&method=" + method + "&path=" + path;
+//		RequestBody formBody = null;
+//		Map<String, String> body = new HashMap<String, String>();
+//		body.put("path", path);
+//		FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
+//		if (body != null && !body.isEmpty()) {
+//			for (String key : body.keySet()) {
+//				formEncodingBuilder.add(key, body.get(key));
+//			}
+//		}
+//		formBody = formEncodingBuilder.build();
+//		String okHttpRes = "";
+//		try {
+//			okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(url, formBody);
+//		} catch (Exception e) {
+//			return null;
+//		}
+		try {
+			SiteInfoBean bean = new SiteInfoBean(url,Constant.localDownloadPath, fileName, Constant.maxDownloadThread);
+			SiteFileFetch fileFetch = new SiteFileFetch(bean);
+			fileFetch.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<PcsFileDto> filesDirectoriesMeta(String path) {

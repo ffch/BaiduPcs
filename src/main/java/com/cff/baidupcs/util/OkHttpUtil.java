@@ -96,12 +96,12 @@ public class OkHttpUtil {
 	}
 
 	public static OkHttpUtil getInstance() {
-		SystemUtil.logDebug("okhttp被调用了。");
+		//SystemUtil.logDebug("okhttp被调用了。");
 		return OkHttpHolder.instance;
 	}
 	
 	public static OkHttpUtil getSimpleInstance() {
-		SystemUtil.logDebug("Simple okhttp被调用了。");
+		//SystemUtil.logDebug("Simple okhttp被调用了。");
 		return OkHttpHolder.simpleInstance;
 	}
 
@@ -321,6 +321,7 @@ public class OkHttpUtil {
 		if (!response.isSuccessful())
 			throw new IOException("Unexpected code " + response);
 		Map<String, List<String>> maps = response.headers().toMultimap();
+		response.close();
 		return maps;
 	}
 

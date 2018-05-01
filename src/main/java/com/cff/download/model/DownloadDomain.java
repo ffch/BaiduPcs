@@ -1,49 +1,51 @@
 package com.cff.download.model;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
+import java.util.List;
 public class DownloadDomain {
-	String totalSize;
-	String downloaded;
-	JSONArray blockList = null;
+	long totalSize;
+	long totalDownloaded;
+	int totalThread;
+	List<DownLoadChunk> blockList = null;
 
-	public DownloadDomain(String totalSize, String downloaded, JSONArray blockList) {
+	public DownloadDomain(long totalSize, long downloaded, List<DownLoadChunk> blockList) {
 		this.totalSize = totalSize;
-		this.downloaded = downloaded;
+		this.totalDownloaded = downloaded;
 		this.blockList = blockList;
 	}
 	
-	public String toJsonString(){
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("totalSize", totalSize);
-		jsonObject.put("downloaded", downloaded);
-		if(blockList != null)
-			jsonObject.put("blockList", blockList.toString());
-		return jsonObject.toString();
+	public DownloadDomain(){
+		
 	}
 
-	public String getTotalSize() {
+	public long getTotalSize() {
 		return totalSize;
 	}
 
-	public void setTotalSize(String totalSize) {
+	public void setTotalSize(long totalSize) {
 		this.totalSize = totalSize;
 	}
 
-	public String getDownloaded() {
-		return downloaded;
+	public long getTotalDownloaded() {
+		return totalDownloaded;
 	}
 
-	public void setDownloaded(String downloaded) {
-		this.downloaded = downloaded;
+	public int getTotalThread() {
+		return totalThread;
 	}
 
-	public JSONArray getBlockList() {
+	public void setTotalThread(int totalThread) {
+		this.totalThread = totalThread;
+	}
+
+	public void setTotalDownloaded(long totalDownloaded) {
+		this.totalDownloaded = totalDownloaded;
+	}
+
+	public List<DownLoadChunk> getBlockList() {
 		return blockList;
 	}
 
-	public void setBlockList(JSONArray blockList) {
+	public void setBlockList(List<DownLoadChunk> blockList) {
 		this.blockList = blockList;
 	}
 }

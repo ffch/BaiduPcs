@@ -18,13 +18,17 @@ public class FileSplitterFetch extends Thread {
 	boolean bDownOver = false; // Downing is over
 	boolean bStop = false; // Stop identical
 	FileAccessI fileAccessI = null; // File Access interface
-
-	public FileSplitterFetch(String sURL, String sName, long nStart, long nEnd, int id) throws IOException {
+	long startConst = 0L;
+	long downLoaded = 0L;
+	SiteFileFetch siteFileFetch;
+	public FileSplitterFetch(SiteFileFetch siteFileFetch,String sURL, String sName, long nStart, long nEnd, int id) throws IOException {
 		this.sURL = sURL;
 		this.nStartPos = nStart;
 		this.nEndPos = nEnd;
+		startConst = nStartPos;
 		nThreadID = id;
 		fileAccessI = new FileAccessI(sName, nStartPos);
+		this.siteFileFetch = siteFileFetch;
 	}
 
 	public void run() {
@@ -34,7 +38,7 @@ public class FileSplitterFetch extends Thread {
 				String sProperty = "bytes=" + nStartPos + "-";				
 				Headers headers = new Headers.Builder().add("User-Agent", "NetFox").add("RANGE", sProperty).build();
 				InputStream input = OkHttpUtil.getSimpleInstance().doGetWithStream(sURL, headers );	
-				SystemUtil.logInfo(sProperty);
+				//SystemUtil.logInfo(sProperty);
 				
 				// logResponseHead(httpConnection);
 				byte[] b = new byte[1024];
@@ -43,17 +47,25 @@ public class FileSplitterFetch extends Thread {
 //					nStartPos += fileAccessI.write(b, 0, nRead);
 //				}
 				
-				int curRead = (int) (willRead > 1024 ? 1024 : willRead);
-				while ((nRead = input.read(b, 0, curRead)) > 0 && nStartPos < nEndPos && !bStop) {
+//				int curRead = (int) (willRead > 1024 ? 1024 : willRead);
+				while ((nRead = input.read(b, 0, 1024)) > 0 && nStartPos < nEndPos && !bStop) {
 					nStartPos += fileAccessI.write(b, 0, nRead);
 					willRead -= nRead;
-					curRead = (int) (willRead > 1024 ? 1024 : willRead);
+//					curRead = (int) (willRead > 1024 ? 1024 : willRead);
+					downLoaded = nStartPos - startConst + 1;
 				}
-				SystemUtil.logInfo("Thread " + nThreadID + " is over!");
-				bDownOver = true;
+				input.close();
+				if(downLoaded > (nEndPos - startConst + 1))downLoaded = nEndPos - startConst + 1;
+
+//				SystemUtil.logInfo("Thread " + nThreadID + " is over!");
+				if(nStartPos >= nEndPos){
+					bDownOver = true;
+					fileAccessI.close();
+				}
+				siteFileFetch.write_nPos();
 				// nPos = fileAccessI.write (b,0,nRead);
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -72,5 +84,9 @@ public class FileSplitterFetch extends Thread {
 
 	public void splitterStop() {
 		bStop = true;
+	}
+	
+	public long getDownLoaded(){
+		return downLoaded;
 	}
 }

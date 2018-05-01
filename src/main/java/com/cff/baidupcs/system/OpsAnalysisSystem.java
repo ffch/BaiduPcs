@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.HashSet;
 import org.junit.Test;
 import com.cff.baidupcs.model.dict.CommandDict;
+import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
 
 public class OpsAnalysisSystem {
 
 	public static void analysisOps(String ops) {
 		String[] command = ops.split("\\s+", 10);
-
+		if(command == null || command.length <1 || StringUtil.isEmpty(command[0]))return;
 		OperateSystem operateSystem = CommandDict.getOperateSystem(command[0]);
 		if (operateSystem == null) {
 			SystemUtil.logError("命令不存在！");
