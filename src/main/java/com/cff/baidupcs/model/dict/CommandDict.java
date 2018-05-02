@@ -1,5 +1,6 @@
 package com.cff.baidupcs.model.dict;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,5 +22,9 @@ public class CommandDict {
 
 	public static OperateSystem getOperateSystem(String key) {
 		return ops.get(key);
+	}
+	
+	public static Collection<String> getKeys(){
+		return ops.keySet();
 	}
 }

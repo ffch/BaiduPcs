@@ -1,7 +1,13 @@
 package com.cff.baidupcs.util;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
+
+import com.cff.baidupcs.model.dict.CommandDict;
+
+import jline.console.ConsoleReader;
+import jline.console.completer.StringsCompleter;
 
 public class SystemUtil {
 	static Scanner scan = new Scanner(System.in);
@@ -10,6 +16,18 @@ public class SystemUtil {
 		System.out.print("BdPcs->  ");
 		String inStr = scan.nextLine();
 		return inStr;
+	}
+	/**
+	 * Jline中文不配合
+	 * @return
+	 * @throws IOException
+	 */
+	@Deprecated
+	public static String getJlineIn() throws IOException{
+		ConsoleReader reader = new ConsoleReader();
+		reader.addCompleter(new StringsCompleter(CommandDict.getKeys()));
+		String line = reader.readLine("BdPcs->");
+		return line;
 	}
 
 	public static String getIn(String msg) {

@@ -16,7 +16,7 @@ public class App {
 		
 		try {
 			String command = SystemUtil.getIn();
-			while (!"quit".equals(command) || !"esc".equals(command) || !"exit".equals(command)) {
+			while (!"quit".equalsIgnoreCase(command) && !"esc".equalsIgnoreCase(command) && !"exit".equalsIgnoreCase(command) && !"q".equalsIgnoreCase(command)) {
 				if(!StringUtil.isEmpty(command)){
 					SystemUtil.logLeft(command);
 					OpsAnalysisSystem.analysisOps(command);
@@ -25,6 +25,7 @@ public class App {
 				command = SystemUtil.getIn();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("\n正在关闭...");
 			return;
 		}
