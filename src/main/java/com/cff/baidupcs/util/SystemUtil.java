@@ -42,6 +42,10 @@ public class SystemUtil {
 	public static void logDebug(String msg) {
 		System.out.println("---------" + msg);
 	}
+	
+	public static void logDebug(Object msg) {
+		System.out.println("---------" + msg);
+	}
 
 	public static void logError(String msg) {
 		System.err.println("[ " + DateUtil.format(new Date(), DateUtil.FullDatePattern) + " ] ## " + msg);

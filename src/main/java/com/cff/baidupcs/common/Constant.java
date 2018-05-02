@@ -8,7 +8,7 @@ public class Constant {
 	public static final String BAIDU_TIEBA_LOGIN_URL = "http://tieba.baidu.com/c/s/login";
 	public static String userName = "";
 	public static String passwd = "";
-	public static String localPath = "H:/";
-	public static String localDownloadPath = "H:/download/";
+	public static String localPath = "D:/";
+	public static String localDownloadPath = "D:/download/";
 	public static int maxDownloadThread = 100;
 }
