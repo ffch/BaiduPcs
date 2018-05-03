@@ -11,4 +11,5 @@ public class Constant {
 	public static String localPath = "D:/";
 	public static String localDownloadPath = "D:/download/";
 	public static int maxDownloadThread = 100;
+	public static String usageFile = "usage.txt";
 }

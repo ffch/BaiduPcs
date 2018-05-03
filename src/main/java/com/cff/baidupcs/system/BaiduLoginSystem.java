@@ -24,8 +24,10 @@ public class BaiduLoginSystem implements OperateSystem {
 	static {
 		opsParams.put("-test", new OpsParamDto(1, true, false));
 		opsParams.put("-loc", new OpsParamDto(2, true, false));
+		opsParams.put("-rk", new OpsParamDto(4, true, false));
+		opsParams.put("-rs", new OpsParamDto(8, true, false));
 	}
-	public List<Integer> allow = Arrays.asList(0, 1, 2, 4);
+	public List<Integer> allow = Arrays.asList(0, 1, 2, 4, 8);
 
 	@Override
 	public void ops(String[] command) throws Exception {
@@ -74,6 +76,22 @@ public class BaiduLoginSystem implements OperateSystem {
 					SystemUtil.logLeft("百度账号登陆成功！");
 					PcsClientService pcsClientServiceLoc = new PcsClientService();
 					pcsClientServiceLoc.initial(baiduDtoFromFile);
+					break;
+				case "-rk":
+					Constant.localPath = "";
+					loadUser();
+					BaiduHttpService rkbaiduHttpService = new BaiduHttpService();
+					BaiduDto rkbaiduDto = rkbaiduHttpService.login();
+					SystemUtil.logLeft("百度账号登陆成功！");
+					PcsClientService rkpcsClientService = new PcsClientService();
+					rkpcsClientService.init(rkbaiduDto);
+					break;
+				case "-rs":
+					Constant.localPath = "";
+					BaiduDto rsbaiduDtoFromFile = loadPcsInfo();
+					SystemUtil.logLeft("百度账号登陆成功！");
+					PcsClientService rspcsClientServiceLoc = new PcsClientService();
+					rspcsClientServiceLoc.initial(rsbaiduDtoFromFile);
 					break;
 				default:
 					break;

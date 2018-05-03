@@ -1,5 +1,6 @@
 package com.cff.baidupcs.system;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +17,12 @@ import com.cff.baidupcs.model.dto.OpsParamDto;
 import com.cff.baidupcs.util.SystemUtil;
 
 public class DownloadSystem implements OperateSystem {
-	public List<Integer> allow = Arrays.asList(0, 1, 2, 4);
+	public List<Integer> allow = Arrays.asList(0, 1, 2, 3, 5);
 	static Map<String, OpsParamDto> opsParams = new ConcurrentHashMap<String, OpsParamDto>();
 	static {
 		opsParams.put("-f", new OpsParamDto(1, "", true));
-		opsParams.put("-d", new OpsParamDto(2, "", true));
+		opsParams.put("-d", new OpsParamDto(3, true, false));
+		opsParams.put("-t", new OpsParamDto(2, "", true));
 	}
 
 	@Override
@@ -48,7 +50,9 @@ public class DownloadSystem implements OperateSystem {
 		if (!checkAllow(value)) {
 			SystemUtil.logError("参数不是这样用的！");
 		}
-
+		if(opsParamsTmp.size() < 1 || !opsParamsTmp.keySet().contains("-d")){
+			genDownloadPath();
+		}
 		if (opsParamsTmp.size() < 1) {
 			if (command.length == 2) {
 				path = command[1];
@@ -63,19 +67,30 @@ public class DownloadSystem implements OperateSystem {
 				case "-f":
 					tmpDownPath = opsParamsTmp.get(key);
 					break;
-				case "-t":			
+				case "-d":
+					
+					break;
+				case "-t":
 					Constant.maxDownloadThread = Integer.parseInt(opsParamsTmp.get(key));
 					break;
 				default:
 					break;
 				}
 			}
-			if(down){
+			if (down) {
 				DownloadService downloadService = new DownloadService();
 				downloadService.run(tmpDownPath);
 			}
 		}
 
+	}
+	
+	public static void genDownloadPath(){
+		Constant.localDownloadPath = "download/";
+		File downloadFile = new File(Constant.localDownloadPath);
+		if(!downloadFile.exists()){
+			downloadFile.mkdirs();
+		}
 	}
 
 	public Boolean checkAllow(int value) {

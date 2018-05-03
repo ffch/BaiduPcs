@@ -2,6 +2,7 @@ package com.cff.baidupcs;
 
 import java.io.IOException;
 
+import com.cff.baidupcs.config.ConfigLoader;
 import com.cff.baidupcs.system.OpsAnalysisSystem;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
@@ -13,7 +14,7 @@ import com.cff.baidupcs.util.SystemUtil;
 public class App {
 	public static void main(String[] args) {
 		System.out.println("欢迎使用百度网盘！");
-		
+		System.out.println(ConfigLoader.getUsage());
 		try {
 			String command = SystemUtil.getJlineIn();
 			while (!"quit".equalsIgnoreCase(command) && !"esc".equalsIgnoreCase(command) && !"exit".equalsIgnoreCase(command) && !"q".equalsIgnoreCase(command)) {
