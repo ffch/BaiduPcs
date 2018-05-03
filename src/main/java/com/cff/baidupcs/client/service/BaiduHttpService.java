@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -26,10 +27,12 @@ import com.cff.baidupcs.model.dto.AuthDto;
 import com.cff.baidupcs.model.dto.BaiduDto;
 import com.cff.baidupcs.model.dto.TiebaDto;
 import com.cff.baidupcs.model.store.BaiduClientStore;
+import com.cff.baidupcs.tess4j.TesseractIdentify;
 import com.cff.baidupcs.util.Md5Util;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.RsaUtil;
 import com.cff.baidupcs.util.StringUtil;
+import com.cff.baidupcs.util.SystemUtil;
 
 import okhttp3.Cookie;
 import okhttp3.FormBody;
@@ -126,12 +129,13 @@ public class BaiduHttpService {
 			switch (errNo) {
 			case "500001":
 			case "500002":
-				System.out.println("请输入验证码：");
-				System.out.println(
-						"验证码链接：" + "https://wappass.baidu.com/cgi-bin/genimage?" + data.getString("codeString"));
+				System.out.println("需要输入验证码^_^");
+				String imgUrl = "https://wappass.baidu.com/cgi-bin/genimage?" + data.getString("codeString");
+				System.out.println("验证码链接：" + imgUrl);
+				String testCode = downloadImgAndAnalysis(imgUrl);
+				System.out.println("使用Tesseract猜测验证码为：" + testCode);
 				baiduClient.setVcodestr(data.getString("codeString"));
-				Scanner scan = new Scanner(System.in);
-				String verifycode = scan.nextLine();
+				String verifycode = SystemUtil.getJlineIn("验证码：");
 				baiduClient.setVerifycode(verifycode.trim());
 				return baiduLogin();
 			case "0":
@@ -162,6 +166,29 @@ public class BaiduHttpService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String downloadImgAndAnalysis(String url) throws Exception {
+		String fileName = "imgcode.png";
+		File imgFile = new File(fileName);
+		FileOutputStream fo = new FileOutputStream(imgFile);
+		byte[] b = new byte[1024];
+		int nRead;
+		InputStream input = OkHttpUtil.getSimpleInstance().doGetWithStream(url, null);
+		while ((nRead = input.read(b, 0, 1024)) > 0) {
+			fo.write(b, 0, nRead);
+		}
+		fo.close();
+		String result = TesseractIdentify.scan(imgFile);
+		System.out.println("验证码本地路径为：" + imgFile.getAbsolutePath());
+		return result;
+	}
+
+	public static void main(String args[]) throws Exception {
+		String imgUrl = "https://wappass.baidu.com/cgi-bin/genimage?"
+				+ "jxG7f07e2152b59c151020d15619801097b6120440615023110";
+
+		System.out.println(downloadImgAndAnalysis(imgUrl));
 	}
 
 	public static void setBduus(BaiduDto baidu) {

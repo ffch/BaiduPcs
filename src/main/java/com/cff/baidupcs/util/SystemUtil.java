@@ -28,6 +28,13 @@ public class SystemUtil {
 		String line = reader.readLine("BdPcs->");
 		return line;
 	}
+	
+	public static String getJlineIn(String msg) throws IOException{
+		ConsoleReader reader = new ConsoleReader();
+		reader.addCompleter(new StringsCompleter(CommandDict.getKeys()));
+		String line = reader.readLine(msg);
+		return line;
+	}
 
 	public static String getIn(String msg) {
 		System.out.print(msg);

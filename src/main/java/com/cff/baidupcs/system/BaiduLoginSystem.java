@@ -53,8 +53,8 @@ public class BaiduLoginSystem implements OperateSystem {
 			SystemUtil.logError("参数不是这样用的！");
 		}
 		if (opsParamsTmp.size() < 1) {
-			Constant.userName = SystemUtil.getIn(" # 请输入用户名： ");
-			Constant.passwd = SystemUtil.getIn(" # 请输入密码： ");
+			Constant.userName = SystemUtil.getJlineIn("-> 请输入用户名：");
+			Constant.passwd = SystemUtil.getJlineIn("-> 请输入密码： ");
 			BaiduHttpService baiduHttpService = new BaiduHttpService();
 			BaiduDto baiduDto = baiduHttpService.login();
 			SystemUtil.logLeft("百度账号登陆成功！");

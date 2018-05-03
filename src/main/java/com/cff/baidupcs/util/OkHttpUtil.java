@@ -136,7 +136,12 @@ public class OkHttpUtil {
 	 * @throws IOException
 	 */
 	public InputStream doGetWithStream(String uri, Headers headers) throws IOException {
-		Request request = new Request.Builder().url(uri).headers(headers).build();
+		Request request = null;
+		if(headers == null){
+			request = new Request.Builder().url(uri).build();
+		}else{
+			request = new Request.Builder().url(uri).headers(headers).build();
+		}
 
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful())
