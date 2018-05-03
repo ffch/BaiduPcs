@@ -108,10 +108,8 @@ public class BaiduHttpService {
 			RequestBody formBody = null;
 
 			FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
-			if (body != null && !body.isEmpty()) {
-				for (String key : body.keySet()) {
-					formEncodingBuilder.add(key, body.get(key));
-				}
+			for (String key : body.keySet()) {
+				formEncodingBuilder.add(key, body.get(key));
 			}
 			formBody = formEncodingBuilder.build();
 
@@ -221,7 +219,7 @@ public class BaiduHttpService {
 		String name = tiebaDto.getBaidu().getName();
 		if (!StringUtil.isEmpty(uid)) {
 			getUserInfoByUID(tiebaDto);
-		} else if (!StringUtil.isEmpty(uid)) {
+		} else if (!StringUtil.isEmpty(name)) {
 			getUserInfoByName(tiebaDto);
 		} else {
 			System.err.println("Baidu uid and name are null");
@@ -304,11 +302,10 @@ public class BaiduHttpService {
 
 		RequestBody formBody = null;
 		FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
-		if (body != null && !body.isEmpty()) {
-			for (String key : body.keySet()) {
-				formEncodingBuilder.add(key, body.get(key));
-			}
+		for (String key : body.keySet()) {
+			formEncodingBuilder.add(key, body.get(key));
 		}
+		
 		formBody = formEncodingBuilder.build();
 
 		String result = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_TIEBA_LOGIN_URL, formBody,

@@ -110,10 +110,8 @@ public class PcsClientService {
 		Map<String, String> body = new HashMap<String, String>();
 		body.put("path", path);
 		FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
-		if (body != null && !body.isEmpty()) {
-			for (String key : body.keySet()) {
-				formEncodingBuilder.add(key, body.get(key));
-			}
+		for (String key : body.keySet()) {
+			formEncodingBuilder.add(key, body.get(key));
 		}
 		formBody = formEncodingBuilder.build();
 		String okHttpRes = "";

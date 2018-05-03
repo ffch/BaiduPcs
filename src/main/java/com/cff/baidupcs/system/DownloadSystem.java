@@ -28,13 +28,17 @@ public class DownloadSystem implements OperateSystem {
 	@Override
 	public void ops(String[] command) throws Exception {
 		String path = "/";
-
+		String downParam = "";
 		Map<String, String> opsParamsTmp = new HashMap<String, String>();
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
 			OpsParamDto tmp = opsParams.get(command[i]);
-			if (tmp == null)
+			if (tmp == null){
+				if(i == command.length - 1){
+					downParam = command[command.length - 1];
+				}
 				continue;
+			}
 			if (tmp.getIsValue()) {
 				if (i == command.length - 1) {
 					SystemUtil.logError("参数错误！");
@@ -66,6 +70,7 @@ public class DownloadSystem implements OperateSystem {
 				switch (key) {
 				case "-f":
 					tmpDownPath = opsParamsTmp.get(key);
+					down = true;
 					break;
 				case "-d":
 					
@@ -80,6 +85,9 @@ public class DownloadSystem implements OperateSystem {
 			if (down) {
 				DownloadService downloadService = new DownloadService();
 				downloadService.run(tmpDownPath);
+			}else{
+				DownloadService downloadService = new DownloadService();
+				downloadService.run(downParam);		
 			}
 		}
 

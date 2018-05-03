@@ -35,8 +35,10 @@ public class BaiduLoginSystem implements OperateSystem {
 		int value = 0;
 		for (int i = 1; i < command.length; i++) {
 			OpsParamDto tmp = opsParams.get(command[i]);
-			if (tmp == null)
+			if (tmp == null){
 				i++;
+				continue;
+			}
 			if (tmp.getIsValue()) {
 				if (i == command.length - 1) {
 					SystemUtil.logError("参数错误！");
@@ -117,6 +119,7 @@ public class BaiduLoginSystem implements OperateSystem {
 		baiduDto.setWorkdir(properties.getProperty("workdir"));
 		baiduDto.setUID(properties.getProperty("uid"));
 		baiduDto.setNameShow(properties.getProperty("nameshow"));
+		in.close();
 		return baiduDto;
 	}
 
@@ -128,5 +131,6 @@ public class BaiduLoginSystem implements OperateSystem {
 		Constant.passwd = properties.getProperty("passwd");
 		SystemUtil.logDebug(Constant.userName);
 		SystemUtil.logDebug(Constant.passwd);
+		in.close();
 	}
 }

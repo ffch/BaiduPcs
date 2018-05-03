@@ -16,7 +16,7 @@ public class StringUtil {
 	private static final String CURRENT_PATH = ".";
 
 	public static Boolean isEmpty(String data) {
-		if (data == null || "".equals(data.trim())) {
+		if (data == null || data.length() == 0) {
 			return true;
 		}
 		return false;
