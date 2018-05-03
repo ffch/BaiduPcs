@@ -10,6 +10,7 @@ import com.cff.baidupcs.client.service.BaiduHttpService;
 import com.cff.baidupcs.client.service.DownloadService;
 import com.cff.baidupcs.client.service.LsHttpService;
 import com.cff.baidupcs.client.service.PcsClientService;
+import com.cff.baidupcs.common.Constant;
 import com.cff.baidupcs.model.dto.BaiduDto;
 import com.cff.baidupcs.model.dto.OpsParamDto;
 import com.cff.baidupcs.util.SystemUtil;
@@ -19,7 +20,7 @@ public class DownloadSystem implements OperateSystem {
 	static Map<String, OpsParamDto> opsParams = new ConcurrentHashMap<String, OpsParamDto>();
 	static {
 		opsParams.put("-f", new OpsParamDto(1, "", true));
-		opsParams.put("-d", new OpsParamDto(2, true, false));
+		opsParams.put("-d", new OpsParamDto(2, "", true));
 	}
 
 	@Override
@@ -55,15 +56,23 @@ public class DownloadSystem implements OperateSystem {
 			DownloadService downloadService = new DownloadService();
 			downloadService.run(path);
 		} else {
+			boolean down = false;
+			String tmpDownPath = path;
 			for (String key : opsParamsTmp.keySet()) {
 				switch (key) {
 				case "-f":
-					DownloadService downloadService = new DownloadService();
-					downloadService.run(opsParamsTmp.get(key));
+					tmpDownPath = opsParamsTmp.get(key);
+					break;
+				case "-t":			
+					Constant.maxDownloadThread = Integer.parseInt(opsParamsTmp.get(key));
 					break;
 				default:
 					break;
 				}
+			}
+			if(down){
+				DownloadService downloadService = new DownloadService();
+				downloadService.run(tmpDownPath);
 			}
 		}
 

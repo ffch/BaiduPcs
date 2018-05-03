@@ -98,6 +98,7 @@ public class SiteFileFetch{
 			}
 			System.err.println("文件下载结束！");
 			isOver = true;
+			tmpFile.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
