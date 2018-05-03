@@ -18,11 +18,10 @@ public class SystemUtil {
 		return inStr;
 	}
 	/**
-	 * Jline中文不配合
+	 * Jline输入，2.14.5版本可以用了
 	 * @return
 	 * @throws IOException
 	 */
-	@Deprecated
 	public static String getJlineIn() throws IOException{
 		ConsoleReader reader = new ConsoleReader();
 		reader.addCompleter(new StringsCompleter(CommandDict.getKeys()));

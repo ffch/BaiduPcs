@@ -15,14 +15,14 @@ public class App {
 		System.out.println("欢迎使用百度网盘！");
 		
 		try {
-			String command = SystemUtil.getIn();
+			String command = SystemUtil.getJlineIn();
 			while (!"quit".equalsIgnoreCase(command) && !"esc".equalsIgnoreCase(command) && !"exit".equalsIgnoreCase(command) && !"q".equalsIgnoreCase(command)) {
 				if(!StringUtil.isEmpty(command)){
 					SystemUtil.logLeft(command);
 					OpsAnalysisSystem.analysisOps(command);
 				}
 
-				command = SystemUtil.getIn();
+				command = SystemUtil.getJlineIn();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
