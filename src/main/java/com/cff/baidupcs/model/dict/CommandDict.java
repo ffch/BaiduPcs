@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.cff.baidupcs.system.BaiduLoginSystem;
 import com.cff.baidupcs.system.DownloadSystem;
+import com.cff.baidupcs.system.LocalPathSystem;
 import com.cff.baidupcs.system.OperateSystem;
 import com.cff.baidupcs.system.PcsCdSystem;
 import com.cff.baidupcs.system.PcsLsSystem;
@@ -18,6 +19,7 @@ public class CommandDict {
 		ops.put("ls", new PcsLsSystem());
 		ops.put("download", new DownloadSystem());
 		ops.put("cd", new PcsCdSystem());
+		ops.put("path", new LocalPathSystem());
 	}
 
 	public static OperateSystem getOperateSystem(String key) {

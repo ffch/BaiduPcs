@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -25,6 +26,8 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * RSA 工具类。提供加密，解密，生成密钥对等方法。
@@ -35,6 +38,14 @@ public class RsaUtil {
 
 	private static String RSAKeyStore = "C:/RSAKey.txt";
 
+	static {
+
+		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+			Security.addProvider(new BouncyCastleProvider());
+		}
+
+	}
+
 	/**
 	 * * 生成密钥对 *
 	 * 
@@ -43,8 +54,7 @@ public class RsaUtil {
 	 */
 	public static KeyPair generateKeyPair() throws Exception {
 		try {
-			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
-					new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA", "BC");
 			final int KEY_SIZE = 1024;// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
 			keyPairGen.initialize(KEY_SIZE, new SecureRandom());
 			KeyPair keyPair = keyPairGen.generateKeyPair();
@@ -91,7 +101,7 @@ public class RsaUtil {
 	public static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) throws Exception {
 		KeyFactory keyFac = null;
 		try {
-			keyFac = KeyFactory.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			keyFac = KeyFactory.getInstance("RSA", "BC");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new Exception(ex.getMessage());
 		}
@@ -117,7 +127,7 @@ public class RsaUtil {
 	public static RSAPublicKey generateRSAPublicKey(byte[] modulus, BigInteger publicExponent) throws Exception {
 		KeyFactory keyFac = null;
 		try {
-			keyFac = KeyFactory.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			keyFac = KeyFactory.getInstance("RSA", "BC");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new Exception(ex.getMessage());
 		}
@@ -143,7 +153,7 @@ public class RsaUtil {
 	public static RSAPrivateKey generateRSAPrivateKey(byte[] modulus, byte[] privateExponent) throws Exception {
 		KeyFactory keyFac = null;
 		try {
-			keyFac = KeyFactory.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			keyFac = KeyFactory.getInstance("RSA", "BC");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new Exception(ex.getMessage());
 		}
@@ -168,7 +178,7 @@ public class RsaUtil {
 	 */
 	public static byte[] encrypt(PublicKey pk, byte[] data) throws Exception {
 		try {
-			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			Cipher cipher = Cipher.getInstance("RSA", "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, pk);
 			int blockSize = cipher.getBlockSize();// 获得加密块大小，如：加密前数据为128个byte，而key_size=1024
 			// 加密块大小为127
@@ -208,7 +218,7 @@ public class RsaUtil {
 	 */
 	public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
 		try {
-			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			Cipher cipher = Cipher.getInstance("RSA", "BC");
 			cipher.init(Cipher.DECRYPT_MODE, pk);
 			int blockSize = cipher.getBlockSize();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
