@@ -13,6 +13,7 @@ import com.cff.baidupcs.model.dto.PcsFileDto;
 import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
+import com.cff.ui.file.PcsFile;
 
 public class LsHttpService {
 	PcsClientService pcsClientService;
@@ -35,6 +36,22 @@ public class LsHttpService {
 			e.printStackTrace();
 		}
 	}
+	
+	public List<PcsFile> runLsUI(String path) {
+		try {
+			List<PcsFileDto> pcsFileDtos = getAbsPcsPath(path);
+			List<PcsFile> pcsFiles = new ArrayList<PcsFile>();
+			for (PcsFileDto pcsFileDto : pcsFileDtos) {
+				pcsFiles.add(new PcsFile(pcsFileDto.getServerFilename(),pcsFileDto.getPath(),pcsFileDto.getIsDir()));
+			}
+			System.out.println(pcsFiles);
+			return pcsFiles;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 	public List<PcsFileDto> getPcsPath(String path) throws IOException {
 		BaiduDto baiduDto = BaiduClientStore.currentActiveBaiduDto;
@@ -56,5 +73,23 @@ public class LsHttpService {
 		}
 		return pcsFileDtos;
 	}
-
+	
+	public List<PcsFileDto> getAbsPcsPath(String path) throws IOException {
+		path = StringUtil.cleanPath(path);
+		if (!path.startsWith("/")) {
+			path = StringUtil.cleanPath(path);
+		}
+		List<PcsFileDto> pcsFileDtos = new ArrayList<PcsFileDto>();
+		String res = pcsClientService.prepareFilesDirectoriesList(path);
+		JSONObject json = JSONObject.parseObject(res);
+		if (json == null)
+			return null;
+		JSONArray ja = json.getJSONArray("list");
+		for (Object tmp : ja) {
+			JSONObject jobj = (JSONObject) tmp;
+			PcsFileDto pcsFileDto = (PcsFileDto) JSONObject.toJavaObject(jobj, PcsFileDto.class);
+			pcsFileDtos.add(pcsFileDto);
+		}
+		return pcsFileDtos;
+	}
 }

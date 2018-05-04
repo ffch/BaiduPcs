@@ -106,7 +106,7 @@ public class LoginView extends JFrame {
 		} catch (IOException e) {
 		}
 
-		LoginActionListener loginActionListener = new LoginActionListener(userTextField, passTextField, cbKey, cbToken,label);
+		LoginActionListener loginActionListener = new LoginActionListener(userTextField, passTextField, cbKey, cbToken,label,this);
 		actionEvent(loginBtn, loginActionListener);
 	}
 

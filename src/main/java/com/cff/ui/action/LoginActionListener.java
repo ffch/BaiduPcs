@@ -2,6 +2,7 @@ package com.cff.ui.action;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -29,6 +30,7 @@ import com.cff.baidupcs.client.BaiduLoginRes;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.ui.CodeDialog;
 import com.cff.ui.LoginView;
+import com.cff.ui.file.UI;
 import com.cff.ui.util.ResourceUtil;
 
 public class LoginActionListener implements ActionListener {
@@ -37,14 +39,15 @@ public class LoginActionListener implements ActionListener {
 	JCheckBox cbKey;
 	JCheckBox cbToken;
 	JLabel label;
-
+	LoginView loginView;
 	public LoginActionListener(JTextField userTextField, JPasswordField passTextField, JCheckBox cbKey,
-			JCheckBox cbToken, JLabel label) {
+			JCheckBox cbToken, JLabel label, LoginView loginView) {
 		this.userTextField = userTextField;
 		this.passTextField = passTextField;
 		this.cbKey = cbKey;
 		this.cbToken = cbToken;
 		this.label = label;
+		this.loginView = loginView;
 	}
 
 	@Override
@@ -75,6 +78,20 @@ public class LoginActionListener implements ActionListener {
 		System.out.println(baiduLoginRes);
 		if ("0".equals(baiduLoginRes.getErrCode())) {
 			label.setText("登录成功！");
+			JFrame frame = new JFrame();
+			URL iconImage = ResourceUtil.getResource("ui/img/icon.jpg");// 图片的位置
+			frame.setIconImage(new ImageIcon(iconImage).getImage());
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        frame.getContentPane().add(new UI(frame));
+	        frame.pack();
+	        
+	        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	        int left = (screen.width - frame.getWidth()) / 2;
+	        int top = (screen.height - frame.getHeight()) / 2;
+
+	        frame.setLocation(left, top);
+	        frame.setVisible(true);
+	        loginView.dispose();
 		} else if ("500001".equals(baiduLoginRes.getErrCode()) || "500002".equals(baiduLoginRes.getErrCode())) {
 			CodeDialog dialog = new CodeDialog(baiduLoginRes); // 生成小窗体并把数据对象传给小窗体
 			dialog.setTitle("验证码");
