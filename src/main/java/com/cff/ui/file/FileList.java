@@ -24,6 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListDataListener;
 
 import com.cff.baidupcs.client.service.DownloadService;
+import com.cff.baidupcs.common.Constant;
 import com.cff.download.SiteFileFetchInter;
 import com.cff.ui.ProcessView;
 import com.cff.ui.timer.SpeedTimerTask;
@@ -87,9 +88,12 @@ public class FileList extends JList {
 	public static void saveFile(FolderNode obj) {
 		// 弹出文件选择框
 		JFileChooser chooser = new JFileChooser();
-
+		chooser.setDialogTitle("保存文件");     //自定义选择框标题
+		chooser.setCurrentDirectory(new File(Constant.localDownloadPath));
+		chooser.setSelectedFile(new File(obj.toString())); //设置默认文件名
 		// 下面的方法将阻塞，直到【用户按下保存按钮且“文件名”文本框不为空】或【用户按下取消按钮】
-		int option = chooser.showSaveDialog(null);
+//		int option = chooser.showSaveDialog(null);
+		int option = chooser.showDialog(null, "保存文件");
 		if (option == JFileChooser.APPROVE_OPTION) { // 假如用户选择了保存
 			File file = chooser.getSelectedFile();
 			System.out.println(file.getAbsolutePath());
