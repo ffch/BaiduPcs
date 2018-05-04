@@ -1,5 +1,9 @@
 package com.cff.download;
 
+import java.util.TimerTask;
+
+import com.cff.ui.timer.SpeedTimerTask;
+
 public interface SiteFileFetchInter {
 
 	public void write_nPos();
@@ -13,5 +17,7 @@ public interface SiteFileFetchInter {
 	public int getCurThreadNum();
 
 	public int getTotalThreadNum();
+	
+	public void siteStop();
 
 }

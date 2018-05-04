@@ -8,13 +8,13 @@ import com.cff.baidupcs.util.SystemUtil;
 import com.cff.download.SiteFileFetch;
 import com.cff.download.SiteFileFetchInter;
 
-public class SpeedTimerTask implements Runnable {
-	static long lastDown = 0L;
+public class SpeedTimerTask extends TimerTask {
+	long lastDown = 0L;
+	int rate;
 	SiteFileFetchInter siteFileFetch;
-	ProgressMonitor pbar;
-	public SpeedTimerTask(SiteFileFetchInter siteFileFetch,ProgressMonitor pbar) {
+	String speedDisplay="";
+	public SpeedTimerTask(SiteFileFetchInter siteFileFetch) {
 		this.siteFileFetch = siteFileFetch;
-		this.pbar = pbar;
 	}
 
 	@Override
@@ -31,24 +31,32 @@ public class SpeedTimerTask implements Runnable {
 		long downloaded = siteFileFetch.getDownloaded();
 		double speed = ((double) (downloaded - lastDown) / 1024) / 1000;
 		lastDown = downloaded;
-		double rate = (double) downloaded / siteFileFetch.getnFileLength() * 100;
-
-		String speedDisplay = String.format("%.3f", speed) + "M/s";
+		double rateNow = (double) downloaded / siteFileFetch.getnFileLength() * 100;
+		rate = (int)rateNow;
+		speedDisplay = String.format("%.3f", speed) + "M/s";
 		if (speed < 1)
 			speedDisplay = String.format("%.1f", speed * 1000) + "k/s";
-		if (pbar.isCanceled()) {
-            pbar.close();
-            System.exit(1);
-        }
-        pbar.setProgress((int)rate);
-        pbar.setNote("Operation is " + rate + "% complete");
-//		SystemUtil.logClear("下载线程：" + siteFileFetch.getCurThreadNum() + "/" + siteFileFetch.getTotalThreadNum()
-//				+ ", 已下载：" + String.format("%.1f", rate) + "%, " + "当前速度：" + speedDisplay, "\r%36s");
+		
+		System.out.println("下载线程：" + siteFileFetch.getCurThreadNum() + "/" + siteFileFetch.getTotalThreadNum()
+				+ ", 已下载：" +  rate + "%, " + "当前速度：" + speedDisplay);
+
 	}
 
 	public static void main(String args[]) {
 		long a = 123445L;
 		float b = (float) a / 1000;
 		System.out.print(b);
+	}
+
+	public int getAmount() {
+		return 100;
+	}
+
+	public int getCurrent() {
+		return rate;
+	}
+	
+	public String getSpeedDisplay() {
+		return speedDisplay;
 	}
 }

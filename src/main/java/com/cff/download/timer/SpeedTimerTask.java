@@ -7,7 +7,7 @@ import com.cff.download.SiteFileFetch;
 import com.cff.download.SiteFileFetchInter;
 
 public class SpeedTimerTask extends TimerTask {
-	static long lastDown = 0L;
+	long lastDown = 0L;
 	SiteFileFetchInter siteFileFetch;
 
 	public SpeedTimerTask(SiteFileFetchInter siteFileFetch) {

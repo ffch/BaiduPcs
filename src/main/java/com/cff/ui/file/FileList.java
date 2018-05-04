@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Timer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -24,15 +25,15 @@ import javax.swing.event.ListDataListener;
 
 import com.cff.baidupcs.client.service.DownloadService;
 import com.cff.download.SiteFileFetchInter;
+import com.cff.ui.ProcessView;
 import com.cff.ui.timer.SpeedTimerTask;
 /**
  * @author root 右侧文件显示
  */
-public class FileList extends JList implements ActionListener {
+public class FileList extends JList {
 	// PathNode theNode;
 	FileListModel dataModel;
 	static final long serialVersionUID = 10;
-	static SpeedTimerTask speedTimerTask = null;
 	/**
 	* 
 	*/
@@ -94,10 +95,11 @@ public class FileList extends JList implements ActionListener {
 			System.out.println(file.getAbsolutePath());
 			DownloadService downloadService = new DownloadService();
 			SiteFileFetchInter siteFileFetchInter = downloadService.runUI(obj.getAbsPath(), file.getAbsolutePath());
-			UIManager.put("ProgressMonitor.progressText", "下载进度");
-		    UIManager.put("OptionPane.cancelButtonText", "关闭");
-			ProgressMonitor dialog = new ProgressMonitor(null, "等待任务完成", "已完成：", 0, 100);
-			speedTimerTask = new SpeedTimerTask(siteFileFetchInter,dialog);
+			// 统计速度
+			Timer timer = new Timer();
+			SpeedTimerTask speedTimerTask = new SpeedTimerTask(siteFileFetchInter);
+			timer.schedule(speedTimerTask, 0, 600);
+			new ProcessView().init(siteFileFetchInter,speedTimerTask);
 		}
 	}
 	
@@ -107,11 +109,5 @@ public class FileList extends JList implements ActionListener {
 		// theNode = node;
 		dataModel.setNode(node);
 		updateUI();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(speedTimerTask != null)
-			SwingUtilities.invokeLater(speedTimerTask);
 	}
 }

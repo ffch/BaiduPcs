@@ -73,6 +73,8 @@ public class LoginView extends JFrame {
 		jpstatus.add(statusComboBox);
 		JCheckBox cbKey = new JCheckBox("记住密码");
 		JCheckBox cbToken = new JCheckBox("自动登录");
+		cbToken.setSelected(true);
+		cbKey.setSelected(true);
 		jpstatus.add(cbKey);
 		jpstatus.add(cbToken);
 		jp.add(jpstatus);

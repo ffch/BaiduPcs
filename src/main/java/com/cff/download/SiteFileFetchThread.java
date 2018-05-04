@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.SystemUtil;
 import com.cff.download.model.DownLoadChunk;
 import com.cff.download.model.DownloadDomain;
-import com.cff.download.timer.SpeedTimerTask;
+import com.cff.ui.timer.SpeedTimerTask;
 
 import okhttp3.Headers;
 
-public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
+public class SiteFileFetchThread extends Thread implements SiteFileFetchInter{
 	SiteInfoBean siteInfoBean = null; // 文件信息 Bean
 	long[] nStartPos; // 开始位置
 	long[] nEndPos; // 结束位置
@@ -28,7 +29,7 @@ public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
 	int curThreadNum = 0;
 	File tmpFile; // 文件下载的临时信息
 	boolean isUi = false;
-
+	boolean isStarted = false;
 	public SiteFileFetchThread(SiteInfoBean bean) throws IOException {
 		siteInfoBean = bean;
 		tmpFile = new File(bean.getSFilePath() + File.separator + bean.getSFileName() + ".info");
@@ -91,13 +92,8 @@ public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
 					fileSplitterFetch[i].start();
 				}
 			}
+			isStarted = true;
 
-			if(!isUi){
-				// 统计速度
-				Timer timer = new Timer();
-				SpeedTimerTask speedTimerTask = new SpeedTimerTask(this);
-				timer.schedule(speedTimerTask, 0, 1000);
-			}
 
 			// 是否结束 while 循环
 			boolean breakWhile = false;
@@ -125,6 +121,7 @@ public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
 	public boolean isOver(){
 		return isOver;
 	}
+	
 
 	// 获得文件长度
 	public long getFileSize() {
@@ -151,6 +148,7 @@ public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
 
 	public long getDownloaded() {
 		long downloaded = 0L;
+		if(!isStarted)return downloaded;
 		curThreadNum = nStartPos.length;
 		for (int i = 0; i < nStartPos.length; i++) {
 			downloaded += fileSplitterFetch[i].getDownLoaded();

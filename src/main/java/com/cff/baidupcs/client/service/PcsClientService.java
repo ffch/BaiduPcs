@@ -96,7 +96,7 @@ public class PcsClientService {
 		try {
 			SiteInfoBean bean = new SiteInfoBean(url,localPath, fileName, Constant.maxDownloadThread);
 			SiteFileFetchThread fileFetch = new SiteFileFetchThread(bean,true);
-			fileFetch.run();
+			fileFetch.start();
 			return fileFetch;
 		} catch (Exception e) {
 			e.printStackTrace();
