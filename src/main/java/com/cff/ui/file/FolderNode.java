@@ -27,6 +27,10 @@ public class FolderNode implements I_fileSystem {
     public String toString() {
         return theFile.getFileName();
     }
+    
+    public String getAbsPath(){
+    	return theFile.getPath();
+    }
 
     /**
     * create a root node. by default, it should be the DeskTop in window file system.

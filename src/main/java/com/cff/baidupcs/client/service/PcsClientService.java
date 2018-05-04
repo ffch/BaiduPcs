@@ -21,6 +21,8 @@ import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
 import com.cff.download.SiteFileFetch;
+import com.cff.download.SiteFileFetchInter;
+import com.cff.download.SiteFileFetchThread;
 import com.cff.download.SiteInfoBean;
 
 import okhttp3.FormBody;
@@ -66,22 +68,6 @@ public class PcsClientService {
 			url = "http" + url;
 		}
 		url = url + "?app_id=" + defaultAppID + "&method=" + method + "&path=" + path;
-//		RequestBody formBody = null;
-//		Map<String, String> body = new HashMap<String, String>();
-//		body.put("path", path);
-//		FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
-//		if (body != null && !body.isEmpty()) {
-//			for (String key : body.keySet()) {
-//				formEncodingBuilder.add(key, body.get(key));
-//			}
-//		}
-//		formBody = formEncodingBuilder.build();
-//		String okHttpRes = "";
-//		try {
-//			okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(url, formBody);
-//		} catch (Exception e) {
-//			return null;
-//		}
 		try {
 			SiteInfoBean bean = new SiteInfoBean(url,Constant.localDownloadPath, fileName, Constant.maxDownloadThread);
 			SiteFileFetch fileFetch = new SiteFileFetch(bean);
@@ -89,6 +75,33 @@ public class PcsClientService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public SiteFileFetchInter downloadFile(String path, String localPath) {
+		if ("".equals(path)) {
+			return null;
+		}
+		String fileName = localPath.substring(localPath.lastIndexOf("/")+1);
+		localPath = localPath.substring(0, localPath.lastIndexOf("/"));
+		if(StringUtil.isEmpty(fileName))return null;
+		String subPath = "file";
+		String method = "download";
+		String url = "://pcs.baidu.com/rest/2.0/pcs/" + subPath;
+		if (isHTTPS) {
+			url = "https" + url;
+		} else {
+			url = "http" + url;
+		}
+		url = url + "?app_id=" + defaultAppID + "&method=" + method + "&path=" + path;
+		try {
+			SiteInfoBean bean = new SiteInfoBean(url,localPath, fileName, Constant.maxDownloadThread);
+			SiteFileFetchThread fileFetch = new SiteFileFetchThread(bean,true);
+			fileFetch.run();
+			return fileFetch;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public List<PcsFileDto> filesDirectoriesMeta(String path) {

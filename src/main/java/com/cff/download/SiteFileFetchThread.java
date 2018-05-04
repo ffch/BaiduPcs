@@ -15,7 +15,7 @@ import com.cff.download.timer.SpeedTimerTask;
 
 import okhttp3.Headers;
 
-public class SiteFileFetch implements SiteFileFetchInter{
+public class SiteFileFetchThread implements SiteFileFetchInter,Runnable{
 	SiteInfoBean siteInfoBean = null; // 文件信息 Bean
 	long[] nStartPos; // 开始位置
 	long[] nEndPos; // 结束位置
@@ -29,7 +29,7 @@ public class SiteFileFetch implements SiteFileFetchInter{
 	File tmpFile; // 文件下载的临时信息
 	boolean isUi = false;
 
-	public SiteFileFetch(SiteInfoBean bean) throws IOException {
+	public SiteFileFetchThread(SiteInfoBean bean) throws IOException {
 		siteInfoBean = bean;
 		tmpFile = new File(bean.getSFilePath() + File.separator + bean.getSFileName() + ".info");
 		if (tmpFile.exists()) {
@@ -42,7 +42,7 @@ public class SiteFileFetch implements SiteFileFetchInter{
 		}
 	}
 
-	public SiteFileFetch(SiteInfoBean bean, boolean b) {
+	public SiteFileFetchThread(SiteInfoBean bean, boolean b) {
 		siteInfoBean = bean;
 		tmpFile = new File(bean.getSFilePath() + File.separator + bean.getSFileName() + ".info");
 		if (tmpFile.exists()) {
@@ -56,6 +56,7 @@ public class SiteFileFetch implements SiteFileFetchInter{
 		isUi = true;
 	}
 
+	@Override
 	public void run() {
 		// 获得文件长度
 		// 分割文件

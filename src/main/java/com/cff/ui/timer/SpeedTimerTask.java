@@ -1,28 +1,30 @@
-package com.cff.download.timer;
+package com.cff.ui.timer;
 
 import java.util.TimerTask;
+
+import javax.swing.ProgressMonitor;
 
 import com.cff.baidupcs.util.SystemUtil;
 import com.cff.download.SiteFileFetch;
 import com.cff.download.SiteFileFetchInter;
 
-public class SpeedTimerTask extends TimerTask {
+public class SpeedTimerTask implements Runnable {
 	static long lastDown = 0L;
 	SiteFileFetchInter siteFileFetch;
-
-	public SpeedTimerTask(SiteFileFetchInter siteFileFetch) {
+	ProgressMonitor pbar;
+	public SpeedTimerTask(SiteFileFetchInter siteFileFetch,ProgressMonitor pbar) {
 		this.siteFileFetch = siteFileFetch;
+		this.pbar = pbar;
 	}
 
 	@Override
 	public void run() {
 		if (siteFileFetch.isOver()) {
 			try {
-				this.cancel();
+				this.finalize();
 				System.gc();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
-				this.cancel();
 			}
 		}
 
@@ -34,8 +36,14 @@ public class SpeedTimerTask extends TimerTask {
 		String speedDisplay = String.format("%.3f", speed) + "M/s";
 		if (speed < 1)
 			speedDisplay = String.format("%.1f", speed * 1000) + "k/s";
-		SystemUtil.logClear("下载线程：" + siteFileFetch.getCurThreadNum() + "/" + siteFileFetch.getTotalThreadNum()
-				+ ", 已下载：" + String.format("%.1f", rate) + "%, " + "当前速度：" + speedDisplay, "\r%36s");
+		if (pbar.isCanceled()) {
+            pbar.close();
+            System.exit(1);
+        }
+        pbar.setProgress((int)rate);
+        pbar.setNote("Operation is " + rate + "% complete");
+//		SystemUtil.logClear("下载线程：" + siteFileFetch.getCurThreadNum() + "/" + siteFileFetch.getTotalThreadNum()
+//				+ ", 已下载：" + String.format("%.1f", rate) + "%, " + "当前速度：" + speedDisplay, "\r%36s");
 	}
 
 	public static void main(String args[]) {

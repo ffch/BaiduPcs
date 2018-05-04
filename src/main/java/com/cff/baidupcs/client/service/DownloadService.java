@@ -16,6 +16,8 @@ import com.cff.baidupcs.model.store.BaiduClientStore;
 import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
+import com.cff.download.SiteFileFetchInter;
+import com.cff.download.SiteFileFetchThread;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -50,6 +52,25 @@ public class DownloadService {
 			return;
 		}
 		pcsClientService.downloadFile(path);
+	}
+	
+	public SiteFileFetchInter runUI(String path, String localPath) {
+		path = StringUtil.cleanPath(path);
+		if (!path.startsWith("/")) {
+			path = StringUtil.cleanPath(path);
+		}
+		localPath = StringUtil.cleanPath(localPath);
+		List<PcsFileDto> pcsFileDtos = pcsClientService.filesDirectoriesMeta(path);
+		if (pcsFileDtos == null) {
+			SystemUtil.logError("路径不存在！");
+			return null;
+		}
+		PcsFileDto pcsFileDto = pcsFileDtos.get(0);
+		if (pcsFileDto.getIsDir() > 0) {
+			SystemUtil.logError("暂不支持路径下载！");
+			return null;
+		}
+		return pcsClientService.downloadFile(path, localPath);
 	}
 
 	public List<PcsFileDto> getPcsPath(String path) throws IOException {
