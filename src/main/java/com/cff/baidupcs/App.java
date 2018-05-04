@@ -6,6 +6,7 @@ import com.cff.baidupcs.config.ConfigLoader;
 import com.cff.baidupcs.system.OpsAnalysisSystem;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
+import com.cff.ui.LoginView;
 
 /**
  * Hello world!
@@ -13,6 +14,15 @@ import com.cff.baidupcs.util.SystemUtil;
  */
 public class App {
 	public static void main(String[] args) {
+		boolean amRunningJavaW = (System.console() == null);
+		if(amRunningJavaW){
+			LoginView.run();
+		}else{
+			runWithConsole();
+		}
+	}
+	
+	public static void runWithConsole(){
 		System.out.println("欢迎使用百度网盘！");
 		System.out.println(ConfigLoader.getUsage());
 		try {

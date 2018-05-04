@@ -1,5 +1,7 @@
 package com.cff.baidupcs.client;
 
+import com.cff.baidupcs.model.dto.BaiduDto;
+
 public class BaiduLoginRes {
 	String u;
 	String serverTime;
@@ -17,7 +19,25 @@ public class BaiduLoginRes {
 	String second_u;
 	String ppU;
 	String realnameswitch;
+	String errCode;
+	String errMsg;
 
+	public BaiduLoginRes(){
+		
+	}
+	
+	public BaiduLoginRes(String errCode,String errMsg){
+		this.errCode = errCode;
+		this.errMsg = errMsg;
+	}
+	
+	public BaiduLoginRes(BaiduDto baiduDto){
+		this.errCode = "0";
+		this.bduss = baiduDto.getBduss();
+		this.ptoken = baiduDto.getPtoken();
+		this.userid = baiduDto.getUID();
+	}
+	
 	public String getU() {
 		return u;
 	}
@@ -146,13 +166,28 @@ public class BaiduLoginRes {
 		this.realnameswitch = realnameswitch;
 	}
 
+	public String getErrCode() {
+		return errCode;
+	}
+
+	public void setErrCode(String errCode) {
+		this.errCode = errCode;
+	}
+
+	public String getErrMsg() {
+		return errMsg;
+	}
+
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
+
 	@Override
 	public String toString() {
 		return "BaiduLoginRes [u=" + u + ", serverTime=" + serverTime + ", codeString=" + codeString + ", bduss="
 				+ bduss + ", ptoken=" + ptoken + ", bcsn=" + bcsn + ", bcsync=" + bcsync + ", bcchecksum=" + bcchecksum
 				+ ", bctime=" + bctime + ", gotoUrl=" + gotoUrl + ", userid=" + userid + ", phone=" + phone
 				+ ", appealurl=" + appealurl + ", second_u=" + second_u + ", ppU=" + ppU + ", realnameswitch="
-				+ realnameswitch + "]";
+				+ realnameswitch + ", errCode=" + errCode + ", errMsg=" + errMsg + "]";
 	}
-
 }

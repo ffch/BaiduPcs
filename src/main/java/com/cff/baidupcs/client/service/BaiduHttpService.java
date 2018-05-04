@@ -49,6 +49,12 @@ public class BaiduHttpService {
 	public BaiduHttpService() {
 		baiduClient = new BaiduClient();
 	}
+	
+	public BaiduHttpService(String codeString,String code) {
+		baiduClient = new BaiduClient();
+		baiduClient.setVerifycode(code);
+		baiduClient.setVcodestr(codeString);
+	}
 
 	public BaiduDto login() {
 		BaiduDto baiduDto = baiduLogin();
@@ -74,7 +80,99 @@ public class BaiduHttpService {
 			e.printStackTrace();
 		}
 	}
+	
+	public void writeUserInfoToFile(String filePath, String userName,String passwd) {
+		try {
+			File file = new File(filePath);
+			PrintStream ps = new PrintStream(new FileOutputStream(file));
+			ps.println("userName=" + userName);// 往文件里写入字符串
+			ps.println("passwd=" + passwd);
+			ps.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public BaiduLoginRes baiduLogin(String userName, String passwd) {
+
+		try {
+			String enPasswd = RsaUtil.encrypt(
+					StringUtil.stringReverse(passwd + baiduClient.getServerTime()),
+					baiduClient.getRsaPublicKeyModulus());
+			String timestampStr = System.currentTimeMillis() / 1000 + "773_357";
+			Map<String, String> body = new HashMap<String, String>();
+			body.put("username", userName);
+			body.put("password", enPasswd);
+			body.put("verifycode", baiduClient.getVerifycode());
+			body.put("vcodestr", baiduClient.getVcodestr());
+			body.put("isphone", "0");
+			body.put("loginmerge", "1");
+			body.put("action", "login");
+			body.put("uid", timestampStr);
+			body.put("skin", "default_v2");
+			body.put("connect", "0");
+			body.put("dv",
+					"tk0.408376350146535171516806245342@oov0QqrkqfOuwaCIxUELn3oYlSOI8f51tbnGy-nk3crkqfOuwaCIxUou2iobENoYBf51tb4Gy-nk3cuv0ounk5vrkBynGyvn1QzruvN6z3drLJi6LsdFIe3rkt~4Lyz5ktfn1Qlrk5v5D5fOuwaCIxUobJWOI3~rkt~4Lyi5kBfni0vrk8~n15fOuwaCIxUobJWOI3~rkt~4Lyz5DQfn1oxrk0v5k5eruvN6z3drLneFYeVEmy-nk3c-qq6Cqw3h7CChwvi5-y-rkFizvmEufyr1By4k5bn15e5k0~n18inD0b5D8vn1Tyn1t~nD5~5T__ivmCpA~op5gr-wbFLhyFLnirYsSCIAerYnNOGcfEIlQ6I6VOYJQIvh515f51tf5DBv5-yln15f5DFy5myl5kqf5DFy5myvnktxrkT-5T__Hv0nq5myv5myv4my-nWy-4my~n-yz5myz4Gyx4myv5k0f5Dqirk0ynWyv5iTf5DB~rk0z5Gyv4kTf5DQxrkty5Gy-5iQf51B-rkt~4B__");
+			body.put("getpassUrl", "/passport/getpass?clientfrom=&adapter=0&ssid=&from=&authsite=&bd_page_type=&uid="
+					+ timestampStr + "&pu=&tpl=wimn&u=https://m.baidu.com/usrprofile%3Fuid%3D" + timestampStr
+					+ "%23logined&type=&bdcm=060d5ffd462309f7e5529822720e0cf3d7cad665&tn=&regist_mode=&login_share_strategy=&subpro=wimn&skin=default_v2&client=&connect=0&smsLoginLink=1&loginLink=&bindToSmsLogin=&overseas=&is_voice_sms=&subpro=wimn&hideSLogin=&forcesetpwd=&regdomestic=");
+			body.put("mobilenum", "undefined");
+			body.put("servertime", baiduClient.getServerTime());
+			body.put("gid", "DA7C3AE-AF1F-48C0-AF9C-F1882CA37CD5");
+			body.put("logLoginType", "wap_loginTouch");
+			body.put("FP_UID", "0b58c206c9faa8349576163341ef1321");
+			body.put("traceid", baiduClient.getTraceid());
+
+			RequestBody formBody = null;
+
+			FormBody.Builder formEncodingBuilder = new FormBody.Builder(UTF_8);
+			for (String key : body.keySet()) {
+				formEncodingBuilder.add(key, body.get(key));
+			}
+			formBody = formEncodingBuilder.build();
+
+			Headers headers = new Headers.Builder().add("Content-Type", "application/x-www-form-urlencoded")
+					.add("Accept", "application/json").add("Referer", "https://wappass.baidu.com/")
+					.add("X-Requested-With", "XMLHttpRequest").add("Connection", "keep-alive").build();
+
+			String okHttpRes = OkHttpUtil.getInstance().doPostWithBodyAndHeader(Constant.BAIDU_LOGIN_URL, formBody,
+					headers);
+			JSONObject json = JSONObject.parseObject(okHttpRes);
+			JSONObject errorInfo = json.getJSONObject("errInfo");
+			String errNo = (String) errorInfo.get("no");
+			JSONObject data = json.getJSONObject("data");
+
+			BaiduLoginRes baiduLoginRes = null;
+			switch (errNo) {
+			case "500001":
+			case "500002":
+				baiduLoginRes  = new BaiduLoginRes();
+				baiduLoginRes.setErrCode(errNo);
+				baiduLoginRes.setErrMsg(errorInfo.getString("msg"));
+				String imgUrl = "https://wappass.baidu.com/cgi-bin/genimage?" + data.getString("codeString");
+				baiduLoginRes.setGotoUrl(imgUrl);
+				baiduLoginRes.setCodeString(data.getString("codeString"));
+				return baiduLoginRes;
+			case "0":
+				baiduLoginRes = (BaiduLoginRes) JSONObject.toJavaObject(data, BaiduLoginRes.class);
+				baiduLoginRes.setErrCode(errNo);
+				return baiduLoginRes;
+			default:
+				baiduLoginRes  = new BaiduLoginRes();
+				baiduLoginRes.setErrCode(errNo);
+				baiduLoginRes.setErrMsg(errorInfo.getString("msg"));
+				System.out.println("错误码：" + errNo + "___错误信息：" + errorInfo.get("msg"));
+				break;
+			}
+			return baiduLoginRes;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public BaiduDto baiduLogin() {
 
 		try {
