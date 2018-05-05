@@ -16,6 +16,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.jdesktop.swingx.JXBusyLabel;
+
 /**
 * @author root
    *左侧文件树

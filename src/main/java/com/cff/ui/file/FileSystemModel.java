@@ -4,6 +4,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.jdesktop.swingx.JXBusyLabel;
+
 public class FileSystemModel implements TreeModel {
     I_fileSystem theRoot;
     char fileType = I_fileSystem.DIRECTORY;
