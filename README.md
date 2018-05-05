@@ -4,6 +4,7 @@ java 版百度网盘功能，目前已经实现：
 	3:切换目录 
 	4：多线程下载文件
 
+命令行使用：
 	usage:
 	登陆： 
 		login 
@@ -29,4 +30,15 @@ java 版百度网盘功能，目前已经实现：
 	退出：
 		quit/esc/exit/q
 			
-	
+界面使用：
+        登录：
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125537_c413b9cb_688800.jpeg "1.jpg")
+
+        文件列表：
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125605_f01406cc_688800.jpeg "2.jpg")
+       
+        下载：
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125755_89d38e94_688800.jpeg "3.jpg")
+            
+        进度：
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125816_8d0f99f8_688800.jpeg "4.jpg")
