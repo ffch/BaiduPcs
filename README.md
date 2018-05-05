@@ -1,10 +1,11 @@
-java 版百度网盘功能，目前已经实现： 
-	1：百度网盘登录 
-	2：列出百度网盘文件 
-	3:切换目录 
-	4：多线程下载文件
+java 版百度网盘功能，目前已经实现： <br>
+1：百度网盘登录 <br>
+2：列出百度网盘文件 <br>
+3: 切换目录 <br>
+4: 多线程下载文件<br>
 
-命令行使用：
+###命令行使用：
+
 	usage:
 	登陆： 
 		login 
@@ -29,15 +30,16 @@ java 版百度网盘功能，目前已经实现：
 			-d 指定本地下载路径
 	退出：
 		quit/esc/exit/q
+		
 			
-界面使用：<br>
-        登录：<br>
+###界面使用：<br>
+登录：<br>
             ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125537_c413b9cb_688800.jpeg "1.jpg")<br>
-       文件列表：<br>
+文件列表：<br>
             ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130252_baf11d6c_688800.jpeg "2.jpg")<br>
-       下载：<br>
+下载：<br>
            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130308_1d3453f1_688800.jpeg "3.jpg")<br>       
-        进度：<br>
+进度：<br>
             ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130327_787b4b5c_688800.jpeg "4.jpg")
         
        
