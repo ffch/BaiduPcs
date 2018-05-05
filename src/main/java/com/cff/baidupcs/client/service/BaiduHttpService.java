@@ -33,6 +33,7 @@ import com.cff.baidupcs.util.OkHttpUtil;
 import com.cff.baidupcs.util.RsaUtil;
 import com.cff.baidupcs.util.StringUtil;
 import com.cff.baidupcs.util.SystemUtil;
+import com.cff.ui.UiLog;
 
 import okhttp3.Cookie;
 import okhttp3.FormBody;
@@ -94,7 +95,7 @@ public class BaiduHttpService {
 	}
 
 	public BaiduLoginRes baiduLogin(String userName, String passwd) {
-
+		BaiduLoginRes baiduLoginRes = null;
 		try {
 			String enPasswd = RsaUtil.encrypt(
 					StringUtil.stringReverse(passwd + baiduClient.getServerTime()),
@@ -141,8 +142,8 @@ public class BaiduHttpService {
 			JSONObject errorInfo = json.getJSONObject("errInfo");
 			String errNo = (String) errorInfo.get("no");
 			JSONObject data = json.getJSONObject("data");
-
-			BaiduLoginRes baiduLoginRes = null;
+			UiLog.getLog(BaiduHttpService.class).info(data.toJSONString());
+			
 			switch (errNo) {
 			case "500001":
 			case "500002":
@@ -167,10 +168,18 @@ public class BaiduHttpService {
 			return baiduLoginRes;
 		} catch (IOException e) {
 			e.printStackTrace();
+			baiduLoginRes  = new BaiduLoginRes();
+			baiduLoginRes.setErrCode("1111");
+			baiduLoginRes.setErrMsg(e.getMessage());
+			UiLog.getLog(BaiduHttpService.class).info(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			baiduLoginRes  = new BaiduLoginRes();
+			baiduLoginRes.setErrCode("1111");
+			baiduLoginRes.setErrMsg(e.getMessage());
+			UiLog.getLog(BaiduHttpService.class).info(e.getMessage());
 		}
-		return null;
+		return baiduLoginRes;
 	}
 	
 	public BaiduDto baiduLogin() {
