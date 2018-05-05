@@ -30,15 +30,16 @@ java 版百度网盘功能，目前已经实现：
 	退出：
 		quit/esc/exit/q
 			
-界面使用：
-        登录：
-            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125537_c413b9cb_688800.jpeg "1.jpg")
-
-        文件列表：
-            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130252_baf11d6c_688800.jpeg "2.jpg")
-        
-        下载：
-           ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130308_1d3453f1_688800.jpeg "3.jpg")      
-        
-        进度：
+界面使用：<br>
+        登录：<br>
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/125537_c413b9cb_688800.jpeg "1.jpg")<br>
+       文件列表：<br>
+            ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130252_baf11d6c_688800.jpeg "2.jpg")<br>
+       下载：<br>
+           ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130308_1d3453f1_688800.jpeg "3.jpg")<br>       
+        进度：<br>
             ![输入图片说明](https://gitee.com/uploads/images/2018/0505/130327_787b4b5c_688800.jpeg "4.jpg")
+        
+       
+
+        
